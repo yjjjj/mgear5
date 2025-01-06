@@ -93,3 +93,4 @@ class customShifterMainStep(object):
 
         if self.setup_root:
             pm.parent(dup, self.setup_root)
+        return dup
