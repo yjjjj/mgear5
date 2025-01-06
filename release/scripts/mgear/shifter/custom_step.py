@@ -11,6 +11,10 @@ class customShifterMainStep(object):
         """Constructor
         """
         self._step_dict = stored_dict
+        # init local setup root var
+        # this should be a group to organize the objects of a local setup
+        # we create it in a custom step
+        self.setup_root = None
 
     @property
     def mgear_run(self):
@@ -86,5 +90,6 @@ class customShifterMainStep(object):
             pm.rename(dup, name)
         else:
             pm.rename(dup, "_".join([source.name(), self.name, "setup"]))
-        pm.parent(dup, self.setup_root)
-        return dup
+
+        if self.setup_root:
+            pm.parent(dup, self.setup_root)
