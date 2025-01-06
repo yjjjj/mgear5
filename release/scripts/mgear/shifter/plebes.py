@@ -20,10 +20,9 @@ class Plebes:
         self.template_menu_entries = {}
         self.template = {}
 
-    def template_change(self, menu):
+    def template_change(self, selected_template):
         """Update the Template, when a new one is selected from the menu"""
-        selected_value = pm.optionMenu(menu, query=True, value=True)
-        self.set_template(self.template_menu_entries.get(selected_value))
+        self.set_template(self.template_menu_entries.get(selected_template))
 
     def gui(self):
         """GUI for Plebes"""
