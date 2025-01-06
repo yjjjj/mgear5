@@ -22,17 +22,17 @@ class Plebes:
 
     def template_change(self, menu):
         """Update the Template, when a new one is selected from the menu"""
-        self.set_template(self.template_menu_entries.get(menu.getValue()))
+        selected_value = pm.optionMenu(menu, query=True, value=True)
+        self.set_template(self.template_menu_entries.get(selected_value))
 
     def gui(self):
         """GUI for Plebes"""
         if pm.window("plebesDialog", exists=True):
             pm.deleteUI("plebesDialog")
         win = pm.window("plebesDialog", title="Rig Plebe", sizeable=True)
-        win.setHeight(475)
-        win.setWidth(300)
+        pm.window(win, edit=True, height=475, width=300)
 
-        layout = pm.frameLayout(
+        pm.frameLayout(
             height=475,
             width=300,
             marginHeight=10,
@@ -40,12 +40,9 @@ class Plebes:
             labelVisible=False,
         )
 
-        template_label = pm.text(label="Choose a Character Template:")
+        pm.text(label="Choose a Character Template:")
         self.template_menu = pm.optionMenu(
-            "template_menu", alwaysCallChangeCommand=True
-        )
-        self.template_menu.changeCommand(
-            pm.Callback(self.template_change, self.template_menu)
+            "template_menu", changeCommand=self.template_change
         )
 
         self.help = pm.scrollField(
@@ -54,70 +51,97 @@ class Plebes:
 
         self.populate_template_menu(self.template_menu)
 
-        import_fbx_btn = pm.button(label="Import FBX")
-        import_fbx_btn.setCommand(self.import_fbx)
-        import_fbx_btn.setAnnotation(
-            "Import the FBX of your skinned character."
+        # Import FBX button
+        pm.button(
+            label="Import FBX",
+            command=lambda _: self.import_fbx(),
+            annotation="Import the FBX of your skinned character.",
         )
 
-        fbx_naming_btn = pm.button(label="Fix FBX Naming")
-        fbx_naming_btn.setCommand(self.fix_fbx_naming)
-        fbx_naming_btn.setAnnotation(
-            "Replaces FBXASCxxx  with '_' in node names from imported FBX \n"
-            "files. This is needed when the FBX uses characters that are \n"
-            "not supported in Maya."
+        # Fix FBX Naming button
+        pm.button(
+            label="Fix FBX Naming",
+            command=lambda _: self.fix_fbx_naming(),
+            annotation=(
+                "Replaces FBXASCxxx with '_' in node names from imported FBX \n"
+                "files. This is needed when the FBX uses characters that are \n"
+                "not supported in Maya."
+            ),
         )
 
+        # Separator
         pm.separator(style="in")
 
-        get_guides_btn = pm.button(label="Import Guides")
-        get_guides_btn.setCommand(self.import_guides)
-        get_guides_btn.setAnnotation("Import a mGear biped guide template.")
-
-        align_guides_btn = pm.button(label="Align Guides")
-        align_guides_btn.setCommand(self.align_guides)
-        align_guides_btn.setAnnotation(
-            "Position the guides to match your character.\n\n"
-            "You will need to adjust the heel and foot width guides\n"
-            "manually, and check that knees and elbows are pointing in the\n"
-            "right direction."
+        # Import Guides button
+        pm.button(
+            label="Import Guides",
+            command=lambda _: self.import_guides(),
+            annotation="Import a mGear biped guide template.",
         )
 
-        rig_btn = pm.button(label="Build Rig")
-        rig_btn.setCommand(self.rig)
-        rig_btn.setAnnotation("Build the mGear rig based on the guides.")
+        # Align Guides button
+        pm.button(
+            label="Align Guides",
+            command=lambda _: self.align_guides(),
+            annotation=(
+                "Position the guides to match your character.\n\n"
+                "You will need to adjust the heel and foot width guides\n"
+                "manually, and check that knees and elbows are pointing in the\n"
+                "right direction."
+            ),
+        )
 
+        # Build Rig button
+        pm.button(
+            label="Build Rig",
+            command=lambda _: self.rig(),
+            annotation="Build the mGear rig based on the guides.",
+        )
+
+        # Add row layout for constrain and skin buttons
         pm.rowLayout(
             numberOfColumns=3,
             adjustableColumn=2,
-            columnAttach=[(1, "both", 0), (2, "both", 10), (2, "both", 10)],
-        )
-        constrain_btn = pm.button(label="Constrain to Rig", width=125)
-        constrain_btn.setCommand(self.constrain_to_rig)
-        constrain_btn.setAnnotation(
-            "Constrain the characters joints to the mGear rig."
+            columnAttach=[(1, "both", 0), (2, "both", 10), (3, "both", 10)],
         )
 
-        or_label = pm.text(label=" OR ")
+        # Constrain to Rig button
+        pm.button(
+            label="Constrain to Rig",
+            width=125,
+            command=lambda _: self.constrain_to_rig(),
+            annotation="Constrain the characters joints to the mGear rig.",
+        )
 
+        # OR label
+        pm.text(label=" OR ")
+
+        # Column layout for Skin button and export checkbox
         pm.columnLayout(width=105)
-        skin_btn = pm.button(label="Skin to Rig", width=105)
-        skin_btn.setCommand(self.skin_to_rig)
-        skin_btn.setAnnotation(
-            "Transfer skinning to the mGear rig.\n\n"
-            + "This is done by first exporting the weights and the remapping\n"
-            + "the export to matching mGear joints, before bringing it in."
+        pm.button(
+            label="Skin to Rig",
+            width=105,
+            command=lambda _: self.skin_to_rig(),
+            annotation=(
+                "Transfer skinning to the mGear rig.\n\n"
+                "This is done by first exporting the weights and then remapping\n"
+                "the export to matching mGear joints before bringing it in."
+            ),
         )
 
-        self.export_only_check = pm.checkBox(label="Export Only")
-        self.export_only_check.setAnnotation(
-            "Exports the skin weights, but don't re-apply them. You can\n"
-            + "use mGear>Skin and Weights>Import Skin Pack to manually\n"
-            + "bring them in later.\n\n"
-            + "See the script editor for where to find the skin pack."
+        # Export Only checkbox
+        self.export_only_check = pm.checkBox(
+            label="Export Only",
+            annotation=(
+                "Exports the skin weights, but doesn't re-apply them. You can\n"
+                "use mGear>Skin and Weights>Import Skin Pack to manually\n"
+                "bring them in later.\n\n"
+                "See the script editor for where to find the skin pack."
+            ),
         )
 
-        win.show()
+        # Show the window
+        pm.showWindow(win)
 
     def populate_template_menu(self, template_menu):
         """Populate the template menu from PLEBE_TEMPLATES_DIR environment"""
@@ -145,11 +169,13 @@ class Plebes:
                     parent=template_menu,
                     command=pm.Callback(self.set_template, filename),
                 )
-        self.set_template(
-            self.template_menu_entries.get(template_menu.getValue())
-        )
 
-    def import_fbx(self, nothing):
+        current_value = pm.optionMenu(template_menu, query=True, value=True)
+        default_template = self.template_menu_entries.get(current_value)
+        if default_template:
+            self.set_template(default_template)
+
+    def import_fbx(self):
         """Import a FBX"""
         fbx_filter = "FBX (*.fbx)"
         fbx = pm.fileDialog2(
@@ -162,7 +188,7 @@ class Plebes:
             pm.displayInfo("Importing: {fbx}".format(fbx=fbx))
             pm.importFile(fbx[0])
 
-    def fix_fbx_naming(self, nothing):
+    def fix_fbx_naming(self):
         """Fixes naming of imported FBX's that use unsopperted characters"""
         nodes = []
         for node in pm.ls("*FBXASC*", long=True):
@@ -217,14 +243,14 @@ class Plebes:
         else:
             return False
 
-    def import_guides(self, what):
+    def import_guides(self):
         """Import mGear's Biped Template guides"""
         if pm.objExists("guide"):
             pm.warning("There is already a guide in the scene. Skipping!")
         else:
             io.import_sample_template("biped.sgt")
 
-    def rig(self, nothing):
+    def rig(self):
         """Build the mGear rig from guides"""
         # Sanity check
         if len(pm.ls("rig", assemblies=True)) > 0:
@@ -246,7 +272,7 @@ class Plebes:
         )
         with open(template) as json_file:
             self.template = json.load(json_file)
-        self.help.setText(self.template.get("help"))
+        pm.scrollField(self.help, edit=True, text=self.template.get("help"))
 
     def get_target(self, search_guide):
         """Get's the joint matching the guide"""
@@ -262,7 +288,7 @@ class Plebes:
                 if joint == search_joint:
                     return pm.PyNode(target)
 
-    def align_guides(self, nothing):
+    def align_guides(self):
         """Align the mGear guide to character based on the selected template"""
         # Sanity checking
         if not pm.objExists("guide"):
