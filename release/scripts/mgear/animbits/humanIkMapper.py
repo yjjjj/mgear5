@@ -16,6 +16,7 @@ from mgear.rigbits.mirror_controls import MirrorController
 
 import json
 from functools import partial
+import ast
 
 ########################################
 #   Load Plugins
@@ -463,26 +464,26 @@ class HumanIKMapper:
             for bone in cls.char_config
             if cls.char_config[bone]["sub_ik"]
         ]
-        # print(sub_ik_ctls)
         sub_ik_constraints = [
             cmds.parentConstraint(ctl, query=True) for ctl in sub_ik_ctls
         ]
-        print(sub_ik_constraints)
 
         for file in file_list:
             # TODO test with references
-            # ref_node = cmds.file(file, r=True, namespace=":", type="FBX")
+            ref_node = cmds.file(file, r=True, namespace=":", type="FBX")
             file_ik_human = list(
                 set(pm.ls(type="HIKCharacterNode")) - existing_ik_humans
-            )[0]
+            )
+            if file_ik_human:
+                file_ik_human = file_ik_human[0]
             existing_ik_humans = set(pm.ls(type="HIKCharacterNode"))
 
-            frame_range = "{0}:{1}".format(
-                pm.playbackOptions(q=True, min=True),
-                pm.playbackOptions(q=True, max=True),
+            frame_range = (
+                cmds.playbackOptions(q=True, min=True),
+                cmds.playbackOptions(q=True, max=True)
             )
             # pm.evalDeferred(deferred_cmd)
-            pm.evalDeferred(
+            cmds.evalDeferred(
                 "from mgear.animbits.humanIkMapper import HumanIKMapper \n"
                 'HumanIKMapper.deferred_bake("{0}", "{1}")'.format(
                     file_ik_human, frame_range
@@ -493,8 +494,7 @@ class HumanIKMapper:
     def deferred_bake(cls, ikhuman, frame_range):
         # updates src
         HumanIKMapper.sub_iks_binding(True)
-
-        pm.optionMenuGrp(
+        cmds.optionMenuGrp(
             "hikSourceList", edit=True, value=" {0}".format(ikhuman)
         )
         mel.eval("hikUpdateCurrentSourceFromUI;")
@@ -514,12 +514,12 @@ class HumanIKMapper:
                 mel.eval("hikGetCurrentCharacter;")
             )
         )
-        pm.select(HumanIKMapper.get_sub_ik_bake_attrs(), add=1)
-        pm.bakeResults(
-            pm.ls(sl=1),
+        cmds.select(HumanIKMapper.get_sub_ik_bake_attrs(), add=1)
+        cmds.bakeResults(
+            cmds.ls(sl=1),
             bakeOnOverrideLayer=True,
             simulation=True,
-            t=frame_range,
+            t=ast.literal_eval(frame_range),
             sampleBy=1,
         )
         mel.eval(
@@ -528,8 +528,8 @@ class HumanIKMapper:
             )
         )
         if sub_ik_constraints:
-            pm.delete(sub_ik_constraints)
-        pm.rename("BakeResults", ikhuman)
+            cmds.delete(sub_ik_constraints)
+        cmds.rename("BakeResults", ikhuman)
 
 
 class HumanIKMapperUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
