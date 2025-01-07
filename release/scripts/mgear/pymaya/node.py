@@ -33,7 +33,7 @@ def _setTransformation(node, matrix):
     """
 
     # If the matrix is a list of lists, convert it to OpenMaya.MMatrix
-    if isinstance(matrix, list):
+    if isinstance(matrix, (list, tuple)):
         # Ensure it's a 4x4 matrix (list of 4 lists, each with 4 elements)
         if len(matrix) == 4 and all(len(row) == 4 for row in matrix):
             flat_matrix = [elem for row in matrix for elem in row]
