@@ -1464,7 +1464,7 @@ class HelperSlots(object):
 
                 customStep = imp.load_source(fileName, runPath)
                 if hasattr(customStep, "CustomShifterStep"):
-                    argspec = inspect.getargspec(
+                    argspec = inspect.getfullargspec(
                         customStep.CustomShifterStep.__init__
                     )
                     if "stored_dict" in argspec.args:
