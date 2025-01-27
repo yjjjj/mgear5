@@ -1056,7 +1056,7 @@ class Component(component.Main):
         # 1 bone chain Upv ref ======================================
         self.ikHandleUpvRef = primitive.addIkHandle(
             self.root,
-            self.getName("ikHandleLegChainUpvRef"),
+            self.getName("ikHandleArmChainUpvRef"),
             self.armChainUpvRef,
             "ikSCsolver",
         )

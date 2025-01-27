@@ -311,6 +311,9 @@ class _Node(base.Node):
     def nodeName(self):
         return self.name()
 
+    def getName(self):
+        return self.name()
+
     def longName(self):
         fdag = super(_Node, self).__getattribute__("_Node__fn_dag")
         if fdag is not None:
@@ -390,6 +393,36 @@ class _Node(base.Node):
 
     def listAttr(self, **kwargs):
         return cmd.listAttr(**kwargs)
+
+    def disconnectAttr(self, attr_name):
+        # Construct the full attribute name
+        full_attr = "{}.{}".format(self.name(), attr_name)
+
+        # Check if the attribute exists
+        if not cmds.objExists(full_attr):
+            raise RuntimeError(
+                "Attribute '{}' does not exist.".format(full_attr)
+            )
+
+        # Get the input connection for the attribute
+        input_connection = cmds.listConnections(
+            full_attr, source=True, destination=False, plugs=True
+        )
+
+        if not input_connection:
+            cmd.displayWarning(
+                "Attribute '{}' does not have an input connection.".format(
+                    full_attr
+                )
+            )
+            return
+
+        # Disconnect the source and destination attributes
+        source_attr = input_connection[0]
+        cmds.disconnectAttr(source_attr, full_attr)
+        # cmd.displayInfo(
+        #     "Disconnected '{}' from '{}'.".format(source_attr, full_attr)
+        # )
 
     # NOTE: encapsulation is neded to avoid lossing the types. Previosly it
     # will incorrelty convert the items to a list of strings.
