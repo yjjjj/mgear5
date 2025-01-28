@@ -67,12 +67,12 @@ def _getShape(node, **kwargs):
 def _getShapes(node, **kwargs):
     kwargs.pop("shapes", kwargs.pop("s", None))
     kwargs["shapes"] = True
-    return cmd.listRelatives(node, **kwargs)
+    return cmd.listRelatives(node, fullPath=True, **kwargs)
 
 
 def _getParent(node, generations=1):
     if generations == 1:
-        res = cmd.listRelatives(node, p=True)
+        res = cmd.listRelatives(node, fullPath=True, p=True)
         if res:
             return res[0]
 
@@ -94,7 +94,7 @@ def _getParent(node, generations=1):
 
 def _getChildren(node, **kwargs):
     kwargs["c"] = True
-    return cmd.listRelatives(node, **kwargs)
+    return cmd.listRelatives(node, fullPath=True, **kwargs)
 
 
 def _addChild(node, child, **kwargs):
@@ -439,6 +439,10 @@ class _Node(base.Node):
         return connections
 
     def listRelatives(self, **kwargs):
+        # ensure we use fullpath to avoid name clashing with maya.cmds
+        # this will ensure that return as object and not str if name clashing
+        if 'fullPath' not in kwargs:
+            kwargs['fullPath'] = True
         return cmd.listRelatives(self, **kwargs)
 
     def type(self):
