@@ -618,6 +618,22 @@ class ObjectSet(_Node):
             if other_members:
                 cmds.sets(other_members, addElement=self.name())
 
+    def remove(self, *items):
+        objects_to_remove = []
+
+        # Loop through the provided items
+        for item in items:
+            if isinstance(item, list):
+                # If it's a list, extend the objects to remove
+                objects_to_remove.extend(item)
+            else:
+                # Otherwise, append the single object
+                objects_to_remove.append(item)
+
+        if objects_to_remove:
+            # Add objects to the set using cmds.sets
+            cmds.sets(objects_to_remove, remove=self.name())
+
     def add(self, *items):
         """
         Add one or more objects to the set.
