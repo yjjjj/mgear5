@@ -509,6 +509,37 @@ def disconnectAttr(*args, **kwargs):
         cmds.disconnectAttr(*args, **kwargs)
 
 
+def curve(*args, **kwargs):
+    """
+    Creates a NURBS curve
+
+    """
+    curve_obj = cmds.curve(*args, **kwargs)
+
+    # Get the actual transform name (handles Maya's auto-renaming)
+    transform_name = cmds.ls(curve_obj, long=False)[0]
+    # Find the shapes of the curve
+    shapes = (
+        cmds.listRelatives(transform_name, shapes=True, fullPath=True) or []
+    )
+
+    # Rename shapes based on the transform name
+    if len(shapes) == 1:
+        # Single shape: rename without index
+        cmds.rename(
+            shapes[0], "{}Shape".format(transform_name.replace("|", ""))
+        )
+    else:
+        # Multiple shapes: rename with index
+        for i, shape in enumerate(shapes, start=1):
+            shape_name = "{}Shape{}".format(transform_name, i)
+            cmds.rename(shape, shape_name.replace("|", ""))
+    the_return = _name_to_obj(transform_name)
+    return the_return
+
+
+# set Locals dict
+
 local_dict = locals()
 
 for n, func in inspect.getmembers(cmds, callable):

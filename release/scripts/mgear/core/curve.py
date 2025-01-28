@@ -74,7 +74,7 @@ def addCurve(
     No Longer Returned:
         dagNode: The newly created curve.
     """
-    kwargs = {"n": name, "d": degree}
+    kwargs = {"name": name, "d": degree}
     if close:
         points.extend(points[:degree])
         knots = range(len(points) + degree - 1)
