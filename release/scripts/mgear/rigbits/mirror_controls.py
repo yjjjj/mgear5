@@ -82,7 +82,7 @@ class MirrorController:
             pm.select(clear=True)
 
             # Mirror a source copy under a group node
-            grp = pm.group(world=True)
+            grp = pm.group(em=True, world=True)
             pm.parent(source_copy, grp)
             grp.scaleX.set(-1)
 
