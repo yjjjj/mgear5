@@ -94,7 +94,9 @@ def _getParent(node, generations=1):
 
 def _getChildren(node, **kwargs):
     kwargs["c"] = True
-    return cmd.listRelatives(node, fullPath=True, **kwargs)
+    if 'fullPath' not in kwargs:
+        kwargs['fullPath'] = True
+    return cmd.listRelatives(node, **kwargs)
 
 
 def _addChild(node, child, **kwargs):
