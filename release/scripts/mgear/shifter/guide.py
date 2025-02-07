@@ -1374,6 +1374,16 @@ class HelperSlots(object):
 
         return fullpath
 
+    @classmethod
+    def _editFile(cls, fullpath):
+
+        if sys.platform.startswith("darwin"):
+            subprocess.call(("open", fullpath))
+        elif os.name == "nt":
+            os.startfile(fullpath)
+        elif os.name == "posix":
+            subprocess.call(("xdg-open", fullpath))
+
     def editFile(self, widgetList):
         for cs in widgetList.selectedItems():
             try:
@@ -1381,12 +1391,7 @@ class HelperSlots(object):
                 fullpath = self.get_cs_file_fullpath(cs_data)
 
                 if fullpath:
-                    if sys.platform.startswith("darwin"):
-                        subprocess.call(("open", fullpath))
-                    elif os.name == "nt":
-                        os.startfile(fullpath)
-                    elif os.name == "posix":
-                        subprocess.call(("xdg-open", fullpath))
+                    self._editFile(fullpath)
                 else:
                     pm.displayWarning("Please select one item from the list")
             except Exception:
@@ -1432,7 +1437,7 @@ class HelperSlots(object):
         return os.path.split(scan_dir)[1]
 
     @classmethod
-    def get_steps_dict(self, itemsList):
+    def get_steps_dict(cls, itemsList):
         stepsDict = {}
         stepsDict["itemsList"] = itemsList
         for item in itemsList:
@@ -1444,7 +1449,7 @@ class HelperSlots(object):
         return stepsDict
 
     @classmethod
-    def runStep(self, stepPath, customStepDic):
+    def runStep(cls, stepPath, customStepDic):
         try:
             with pm.UndoChunk():
                 pm.displayInfo("EXEC: Executing custom step: %s" % stepPath)
@@ -1500,18 +1505,21 @@ class HelperSlots(object):
                 + traceback.format_exc(),
                 "Continue",
                 "Stop Build",
+                "Edit",
                 "Try Again!",
             )
             if cont == "Stop Build":
                 # stop Build
                 return True
+            elif cont == "Edit":
+                cls._editFile(stepPath)
             elif cont == "Try Again!":
                 try:  # just in case there is nothing to undo
                     pm.undo()
                 except Exception:
                     pass
                 pm.displayInfo("Trying again! : {}".format(stepPath))
-                inception = self.runStep(stepPath, customStepDic)
+                inception = cls.runStep(stepPath, customStepDic)
                 if inception:  # stops build from the recursion loop.
                     return True
             else:
