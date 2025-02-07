@@ -7,10 +7,10 @@ from . import exception
 
 
 class EnumValue(object):
-    def __init__(self, key, index):
+    def __init__(self, index, key):
         super(EnumValue, self).__init__()
-        self.__key = key
         self.__index = index
+        self.__key = key
 
     @property
     def key(self):
