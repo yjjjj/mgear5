@@ -237,7 +237,10 @@ class DragQListView(QtWidgets.QListView):
         drag = QtGui.QDrag(self)
         drag.setMimeData(mimeData)
         drag.setHotSpot(event.pos())
-        dropAction = drag.start(QtCore.Qt.MoveAction)
+        try:
+            dropAction = drag.start(QtCore.Qt.MoveAction)  # PySide2
+        except AttributeError:
+            dropAction = drag.exec(QtCore.Qt.MoveAction)  # PySide6
         if not dropAction == QtCore.Qt.MoveAction:
             pos = QtGui.QCursor.pos()
             widget = QtWidgets.QApplication.widgetAt(pos)
