@@ -61,7 +61,7 @@ def rig(edge_loop="",
     if edge_loop:
         try:
             edge_loop = [pm.PyNode(e) for e in edge_loop.split(",")]
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning(
                 "Some of the edges listed in edge loop can not be found")
             return
@@ -73,7 +73,7 @@ def rig(edge_loop="",
     if up_vertex:
         try:
             up_vertex = pm.PyNode(up_vertex)
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning("%s can not be found" % up_vertex)
             return
     else:
@@ -83,7 +83,7 @@ def rig(edge_loop="",
     if low_vertex:
         try:
             low_vertex = pm.PyNode(low_vertex)
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning("%s can not be found" % low_vertex)
             return
     else:
@@ -99,7 +99,7 @@ def rig(edge_loop="",
         else:
             try:
                 head_joint = pm.PyNode(head_joint)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning(
                     "Head Joint: %s can not be found" % head_joint
                 )
@@ -111,7 +111,7 @@ def rig(edge_loop="",
         else:
             try:
                 jaw_joint = pm.PyNode(jaw_joint)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning("Jaw Joint: %s can not be found" % jaw_joint)
                 return
     # check if the rig already exist in the current scene
@@ -137,12 +137,12 @@ def rig(edge_loop="",
     #####################
     try:
         ctlSet = pm.PyNode("rig_controllers_grp")
-    except pm.MayaNodeError:
+    except RuntimeError:
         pm.sets(n="rig_controllers_grp", em=True)
         ctlSet = pm.PyNode("rig_controllers_grp")
     try:
         defset = pm.PyNode("rig_deformers_grp")
-    except pm.MayaNodeError:
+    except RuntimeError:
         pm.sets(n="rig_deformers_grp", em=True)
         defset = pm.PyNode("rig_deformers_grp")
 
@@ -318,7 +318,7 @@ def rig(edge_loop="",
         if head_joint and isinstance(head_joint, (str, string_types)):
             try:
                 j_parent = pm.PyNode(head_joint)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 j_parent = False
         elif head_joint and isinstance(head_joint, pm.PyNode):
             j_parent = head_joint
@@ -377,7 +377,7 @@ def rig(edge_loop="",
         if jaw_joint and isinstance(jaw_joint, (str, string_types)):
             try:
                 j_parent = pm.PyNode(jaw_joint)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pass
         elif jaw_joint and isinstance(jaw_joint, pm.PyNode):
             j_parent = jaw_joint
@@ -667,21 +667,21 @@ def rig(edge_loop="",
             if isinstance(parent_node, string_types):
                 parent_node = pm.PyNode(parent_node)
             parent_node.addChild(lips_root)
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning("The Lips rig can not be parent to: %s. Maybe "
                               "this object doesn't exist." % parent_node)
     if head_joint and jaw_joint:
         try:
             if isinstance(head_joint, string_types):
                 head_joint = pm.PyNode(head_joint)
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning("Head Joint or Upper Lip Joint %s. Can not be "
                               "fount in the scene" % head_joint)
             return
         try:
             if isinstance(jaw_joint, string_types):
                 jaw_joint = pm.PyNode(jaw_joint)
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning("Jaw Joint or Lower Lip Joint %s. Can not be "
                               "fount in the scene" % jaw_joint)
             return
@@ -692,14 +692,14 @@ def rig(edge_loop="",
             try:
                 if isinstance(upper_lip_ctl, string_types):
                     upper_lip_ctl = pm.PyNode(upper_lip_ctl)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning("Upper Lip Ctl %s. Can not be "
                                   "fount in the scene" % upper_lip_ctl)
                 return
             try:
                 if isinstance(lower_lip_ctl, string_types):
                     lower_lip_ctl = pm.PyNode(lower_lip_ctl)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning("Lower Lip Ctl %s. Can not be "
                                   "fount in the scene" % lower_lip_ctl)
                 return
@@ -775,7 +775,7 @@ def rig(edge_loop="",
         if head_joint:
             try:
                 head_joint = pm.PyNode(head_joint)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning(
                     "Auto skin aborted can not find %s " % head_joint)
                 return
