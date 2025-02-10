@@ -2,13 +2,13 @@
 
 import json
 from functools import partial
-from six import string_types
+from mgear.core.six import string_types
 
 import mgear.core.pyqt as gqt
-import pymel.core as pm
+import mgear.pymaya as pm
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 from mgear.vendor.Qt import QtCore, QtWidgets
-from pymel.core import datatypes
+from mgear.pymaya import datatypes
 
 from mgear import rigbits
 from mgear.core import meshNavigation, curve, applyop, primitive, icon
