@@ -227,6 +227,16 @@ class MeshVertex(_SingleIndexGeom):
 
         return MeshVertex(self.dagPath(), comp_obj)
 
+    def isOnBoundary(self):
+        """Check if the vertex is on the boundary of the mesh.
+
+        Returns:
+            bool: True if the vertex is on the boundary, False otherwise.
+        """
+        it = OpenMaya.MItMeshVertex(self.dagPath(), self.component())
+        return it.onBoundary()
+
+
 
 class MeshFace(_SingleIndexGeom):
     @classmethod

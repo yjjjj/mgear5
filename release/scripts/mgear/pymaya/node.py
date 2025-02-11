@@ -739,7 +739,7 @@ class NurbsCurve(_Node):
 
     def getCVs(self, space="preTransform"):
         return [
-            datatypes.Point(x)
+            datatypes.Point(x).asVector()
             for x in self.__fn_curve.cvPositions(util.to_mspace(space))
         ]
 

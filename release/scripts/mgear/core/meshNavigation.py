@@ -272,7 +272,7 @@ def bboxCenter(obj, radius=False):
     if radius:
         r = abs((bbx[0][0] - bbx[1][0]) / 2)
         return center, r
-    return center
+    return datatypes.Vector(center)
 
 
 def bBoxData(obj=None, yZero=False, *args):
@@ -318,7 +318,9 @@ def getClosestPolygonFromTransform(geo, loc):
         Closest Polygon
 
     """
-    if isinstance(loc, pm.nodetypes.Transform):
+    if isinstance(
+        loc, (pm.nodetypes.Transform, pm.nodetypes.Joint, pm.nodetypes.Locator)
+    ):
         pos = loc.getTranslation(space="world")
     else:
         pos = datatypes.Vector(loc[0], loc[1], loc[2])
@@ -464,6 +466,7 @@ def get_selected_mesh():
                 break
 
     return mesh_dag_path
+
 
 def get_mesh_dag_path(node):
     """Get the mesh dag path from a given node.

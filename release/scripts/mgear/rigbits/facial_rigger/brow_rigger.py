@@ -62,7 +62,7 @@ def rig(edge_loop,
     if edge_loop:
         try:
             edge_loop = [pm.PyNode(e) for e in edge_loop.split(",")]
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning(
                 "Some of the edges listed in edge loop can not be found")
             return
@@ -156,7 +156,7 @@ def rig(edge_loop,
     if parent_node:
         try:
             parent_node = pm.PyNode(parent_node)
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning(
                 "Static rig parent: %s can not be found" % parent_node)
             return
@@ -165,7 +165,7 @@ def rig(edge_loop,
         try:
             brow_jnt_C = pm.PyNode(brow_jnt_C)
             joints_collect.append(brow_jnt_C)
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning(
                 "Mid parent joint: %s can not be found" % brow_jnt_C)
             return
@@ -179,7 +179,7 @@ def rig(edge_loop,
             try:
                 brow_jnt_L = pm.PyNode(brow_jnt_L)
                 joints_collect.append(brow_jnt_L)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning(
                     "Left parent joint: %s can not be found" % brow_jnt_L)
                 return
@@ -192,7 +192,7 @@ def rig(edge_loop,
             try:
                 brow_jnt_R = pm.PyNode(brow_jnt_R)
                 joints_collect.append(brow_jnt_R)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning(
                     "Right parent joint: %s can not be found." % brow_jnt_R)
                 return
@@ -200,7 +200,7 @@ def rig(edge_loop,
             try:
                 brow_jnt_R = pickWalk.getMirror(brow_jnt_L)[0]
                 joints_collect.append(brow_jnt_R)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning(
                     "Right parent joint: "
                     "%s can't be found. Please set it manually." % brow_jnt_R)
@@ -258,7 +258,7 @@ def rig(edge_loop,
             ctl_parent_L = pm.PyNode(ctl_parent_L)
             controls_collect.append(ctl_parent_L)
             parent_tag_L = ctl_parent_L
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning(
                 "Right (Left) ctl: %s can not be found" % ctl_parent_L)
             return
@@ -272,7 +272,7 @@ def rig(edge_loop,
             ctl_parent_R = pm.PyNode(ctl_parent_R)
             controls_collect.append(ctl_parent_R)
             parent_tag_R = ctl_parent_R
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning(
                 "Right ctl: %s can not be found" % ctl_parent_R)
             return
@@ -286,7 +286,7 @@ def rig(edge_loop,
             ctl_parent_C = pm.PyNode(ctl_parent_C)
             controls_collect.append(ctl_parent_C)
             parent_tag_C = ctl_parent_C
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning(
                 "Main ctl: %s can not be found" % ctl_parent_R)
             return
@@ -301,7 +301,7 @@ def rig(edge_loop,
                 ctl_parent_R = pm.PyNode(ctl_parent_R)
                 controls_collect.append(ctl_parent_R)
                 parent_tag_R = ctl_parent_R
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning(
                     "Right ctl: %s can not be found" % ctl_parent_R)
                 return
@@ -316,12 +316,12 @@ def rig(edge_loop,
     # TODO: the set name should not be hardcoded to "rig" name
     try:
         ctlSet = pm.PyNode("rig_controllers_grp")
-    except pm.MayaNodeError:
+    except RuntimeError:
         pm.sets(n="rig_controllers_grp", em=True)
         ctlSet = pm.PyNode("rig_controllers_grp")
     try:
         defset = pm.PyNode("rig_deformers_grp")
-    except pm.MayaNodeError:
+    except RuntimeError:
         pm.sets(n="rig_deformers_grp", em=True)
         defset = pm.PyNode("rig_deformers_grp")
 
@@ -783,7 +783,7 @@ def rig(edge_loop,
             if isinstance(parent_node, string_types):
                 parent_node = pm.PyNode(parent_node)
             parent_node.addChild(brows_root)
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning("The brow rig can not be parent to: %s. Maybe "
                               "this object doesn't exist." % parent_node)
 
@@ -1119,7 +1119,7 @@ def rig(edge_loop,
         if brow_jnt_C:
             try:
                 brow_jnt_C = pm.PyNode(brow_jnt_C)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning(
                     "Auto skin aborted can not find %s " % brow_jnt_C)
                 return

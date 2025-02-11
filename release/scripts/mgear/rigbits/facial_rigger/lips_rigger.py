@@ -438,7 +438,7 @@ def rig(edge_loop="",
         for joint in joints:
             distance = vector.getDistance(
                 transform.getTranslation(joint),
-                cv.asVector()
+                cv
             )
             if nearest_distance is None or distance < nearest_distance:
                 nearest_distance = distance
@@ -509,7 +509,7 @@ def rig(edge_loop="",
         for joint in joints:
             distance = vector.getDistance(
                 transform.getTranslation(joint),
-                cv.asVector()
+                cv
             )
             if nearest_distance is None or distance < nearest_distance:
                 nearest_distance = distance
