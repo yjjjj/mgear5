@@ -96,6 +96,9 @@ class Point(OpenMaya.MPoint):
     def tolist(self):
         return [self.x, self.y, self.z]
 
+    def asVector(self):
+        return Vector(self.x, self.y, self.z)
+
     def __getitem__(self, item):
         return [self.x, self.y, self.z, self.w][item]
 

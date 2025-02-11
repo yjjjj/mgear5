@@ -39,14 +39,20 @@ class _Geometry(base.Geom):
     def __init__(self, nodename_or_dagpath, component):
         super(_Geometry, self).__init__()
         if isinstance(nodename_or_dagpath, OpenMaya.MDagPath):
-            if not isinstance(component, OpenMaya.MObject) or not component.hasFn(OpenMaya.MFn.kComponent):
+            if not isinstance(
+                component, OpenMaya.MObject
+            ) or not component.hasFn(OpenMaya.MFn.kComponent):
                 raise exception.MayaGeometryError("Invalid component given")
             self.__dagpath = nodename_or_dagpath
             self.__component = component
         else:
-            self.__dagpath, self.__component = _Geometry.__getComponent(nodename_or_dagpath)
+            self.__dagpath, self.__component = _Geometry.__getComponent(
+                nodename_or_dagpath
+            )
             if self.__dagpath is None or self.__component is None:
-                raise exception.MayaGeometryError("No such geometry '{}'".format(nodename_or_dagpath))
+                raise exception.MayaGeometryError(
+                    "No such geometry '{}'".format(nodename_or_dagpath)
+                )
 
     def dagPath(self):
         return self.__dagpath
@@ -100,7 +106,7 @@ class _SingleIndexGeom(_Geometry):
         if self.__indices is None:
             self.__indices = set()
             it = self.IterClass()(self.dagPath(), self.component())
-            while (not it.isDone()):
+            while not it.isDone():
                 self.__indices.add(it.index())
                 it.next()
 
@@ -109,18 +115,23 @@ class _SingleIndexGeom(_Geometry):
     def toStringList(self):
         names = []
         for i in self.indices():
-            names.append(self.dagPath().partialPathName() + ".{}[{}]".format(self.AttrName(), i))
+            names.append(
+                self.dagPath().partialPathName()
+                + ".{}[{}]".format(self.AttrName(), i)
+            )
         return names
 
     def name(self):
-        return self.dagPath().partialPathName() + ".{}[{}]".format(self.AttrName(), self.__indices_str())
+        return self.dagPath().partialPathName() + ".{}[{}]".format(
+            self.AttrName(), self.__indices_str()
+        )
 
     def index(self):
         return self.indices()[0]
 
     def __iter__(self):
         it = self.IterClass()(self.dagPath(), self.component())
-        while (not it.isDone()):
+        while not it.isDone():
             comp = OpenMaya.MFnSingleIndexedComponent()
             comp_obj = comp.create(self.ComponentType())
             comp.addElement(it.index())
@@ -171,11 +182,13 @@ class MeshVertex(_SingleIndexGeom):
         return "vtx"
 
     def __init__(self, nodename_or_dagpath, component):
-        super(MeshVertex, self).__init__(nodename_or_dagpath, component=component)
+        super(MeshVertex, self).__init__(
+            nodename_or_dagpath, component=component
+        )
 
     def getPosition(self, space="preTransform"):
         it = OpenMaya.MItMeshVertex(self.dagPath(), self.component())
-        return datatypes.Point(it.position(util.to_mspace(space)))
+        return datatypes.Point(it.position(util.to_mspace(space))).asVector()
 
     def connectedEdges(self):
         it = OpenMaya.MItMeshVertex(self.dagPath(), self.component())
@@ -194,6 +207,25 @@ class MeshVertex(_SingleIndexGeom):
             comp.addElement(ei)
 
         return MeshFace(self.dagPath(), comp_obj)
+
+    def connectedVertices(self):
+        """Returns a MeshVertex object containing vertices connected to this vertex.
+
+        Returns:
+            MeshVertex: The connected vertices as a MeshVertex object.
+        """
+        it = OpenMaya.MItMeshVertex(self.dagPath(), self.component())
+
+        connected_verts = it.getConnectedVertices()
+
+        # Create a component to store the connected vertices
+        comp = OpenMaya.MFnSingleIndexedComponent()
+        comp_obj = comp.create(OpenMaya.MFn.kMeshVertComponent)
+
+        for vi in connected_verts:
+            comp.addElement(vi)
+
+        return MeshVertex(self.dagPath(), comp_obj)
 
 
 class MeshFace(_SingleIndexGeom):
@@ -214,7 +246,9 @@ class MeshFace(_SingleIndexGeom):
         return "f"
 
     def __init__(self, nodename_or_dagpath, component):
-        super(MeshFace, self).__init__(nodename_or_dagpath, component=component)
+        super(MeshFace, self).__init__(
+            nodename_or_dagpath, component=component
+        )
 
     def getVertices(self):
         it = OpenMaya.MItMeshPolygon(self.dagPath(), self.component())
@@ -255,11 +289,13 @@ class NurbsCurveCV(_SingleIndexGeom):
         return "cv"
 
     def __init__(self, nodename_or_dagpath, component=None):
-        super(NurbsCurveCV, self).__init__(nodename_or_dagpath, component=component)
+        super(NurbsCurveCV, self).__init__(
+            nodename_or_dagpath, component=component
+        )
 
     def getPosition(self, space="preTransform"):
         it = OpenMaya.MItCurveCV(self.dagPath(), self.component())
-        return datatypes.Point(it.position(util.to_mspace(space)))
+        return datatypes.Point(it.position(util.to_mspace(space))).asVector()
 
 
 class MeshEdge(_SingleIndexGeom):
@@ -280,11 +316,15 @@ class MeshEdge(_SingleIndexGeom):
         return "e"
 
     def __init__(self, nodename_or_dagpath, component=None):
-        super(MeshEdge, self).__init__(nodename_or_dagpath, component=component)
+        super(MeshEdge, self).__init__(
+            nodename_or_dagpath, component=component
+        )
 
-    def getPoint(self, index, space='preTransform'):
+    def getPoint(self, index, space="preTransform"):
         it = OpenMaya.MItMeshEdge(self.dagPath(), self.component())
-        return datatypes.Point(it.point(index, util.to_mspace(space)))
+        return datatypes.Point(
+            it.point(index, util.to_mspace(space))
+        ).asVector()
 
     def connectedVertices(self):
         it = OpenMaya.MItMeshEdge(self.dagPath(), self.component())
@@ -296,7 +336,9 @@ class MeshEdge(_SingleIndexGeom):
         comp_obj2 = comp2.create(OpenMaya.MFn.kMeshVertComponent)
         comp2.addElement(it.vertexId(1))
 
-        return MeshVertex(self.dagPath(), comp_obj1), MeshVertex(self.dagPath(), comp_obj2)
+        return MeshVertex(self.dagPath(), comp_obj1), MeshVertex(
+            self.dagPath(), comp_obj2
+        )
 
     def connectedEdges(self):
         it = OpenMaya.MItMeshEdge(self.dagPath(), self.component())
@@ -310,7 +352,9 @@ class MeshEdge(_SingleIndexGeom):
 
     def __contains__(self, other):
         if isinstance(other, MeshEdge):
-            return False if set(other.indices()) - set(self.indices()) else True
+            return (
+                False if set(other.indices()) - set(self.indices()) else True
+            )
         return False
 
 

@@ -94,8 +94,8 @@ def _getParent(node, generations=1):
 
 def _getChildren(node, **kwargs):
     kwargs["c"] = True
-    if 'fullPath' not in kwargs:
-        kwargs['fullPath'] = True
+    if "fullPath" not in kwargs:
+        kwargs["fullPath"] = True
     return cmd.listRelatives(node, **kwargs)
 
 
@@ -443,8 +443,8 @@ class _Node(base.Node):
     def listRelatives(self, **kwargs):
         # ensure we use fullpath to avoid name clashing with maya.cmds
         # this will ensure that return as object and not str if name clashing
-        if 'fullPath' not in kwargs:
-            kwargs['fullPath'] = True
+        if "fullPath" not in kwargs:
+            kwargs["fullPath"] = True
         return cmd.listRelatives(self, **kwargs)
 
     def type(self):
@@ -547,6 +547,10 @@ class _NodeTypes(object):
 
         return None
 
+    def getAllRegisteredTypes(self):
+        """Retrieve all registered node types."""
+        return self.__types.copy()
+
     def __getattribute__(self, name):
         try:
             return super(_NodeTypes, self).__getattribute__(name)
@@ -558,6 +562,35 @@ class _NodeTypes(object):
                 return tcls
 
             raise
+
+    # def __getattribute__(self, name):
+    #     """Override __getattribute__ to fetch registered types safely."""
+    #     # Avoid recursion by bypassing custom lookup for special attributes
+    #     if name in ("__dict__", "_NodeTypes__types", "getTypeClass"):
+    #         return super(_NodeTypes, self).__getattribute__(name)
+
+    #     try:
+    #         return super(_NodeTypes, self).__getattribute__(name)
+    #     except AttributeError:
+    #         # Prevent infinite recursion
+    #         if name.startswith("_"):
+    #             raise
+
+    #         try:
+    #             typename = "{}{}".format(name[0].lower(), name[1:])
+    #             tcls = super(_NodeTypes, self).__getattribute__(
+    #                 "getTypeClass"
+    #             )(typename)
+    #             if tcls:
+    #                 return tcls
+    #         except RecursionError:
+    #             raise RuntimeError(
+    #                 "Recursion detected while retrieving attribute: {}".format(
+    #                     name
+    #                 )
+    #             )
+
+    #         raise
 
     def __init__(self):
         super(_NodeTypes, self).__init__()
@@ -677,8 +710,13 @@ class NurbsCurve(_Node):
     def findParamFromLength(self, l):
         return self.__fn_curve.findParamFromLength(l)
 
-    def getPointAtParam(self, p):
-        return self.__fn_curve.getPointAtParam(p)
+    def getPointAtParam(self, p, space="local"):
+        mspace = (
+            OpenMaya.MSpace.kObject
+            if space == "local"
+            else OpenMaya.MSpace.kWorld
+        )
+        return self.__fn_curve.getPointAtParam(p, mspace)
 
     def form(self):
         frm = self.__fn_curve.form
@@ -705,6 +743,62 @@ class NurbsCurve(_Node):
             for x in self.__fn_curve.cvPositions(util.to_mspace(space))
         ]
 
+    def setCV(self, index, position, space="world"):
+        """Set the position of a single CV.
+
+        Args:
+            index (int): The CV index to modify.
+            position (datatypes.Point): The new position of the CV.
+            space (str): The transformation space (default is "world").
+
+        Raises:
+            IndexError: If the CV index is out of range.
+        """
+        num_cvs = self.__fn_curve.numCVs
+        if index < 0 or index >= num_cvs:
+            raise IndexError(
+                "CV index out of range. Expected 0-{}, got {}.".format(
+                    num_cvs - 1, index
+                )
+            )
+
+        # Ensure position is a datatypes.Point
+        if isinstance(position, (list, tuple)):
+            if len(position) != 3:
+                raise TypeError("Position must be a list/tuple of 3 floats.")
+            position = datatypes.Point(*position)
+        elif not isinstance(position, datatypes.Point):
+            raise TypeError(
+                "Position must be a datatypes.Point or [x, y, z] list."
+            )
+
+        mspace = util.to_mspace(space)
+        self.__fn_curve.setCVPosition(index, position, mspace)
+        self.__fn_curve.updateCurve()
+
+    def setCVs(self, cvs, space="preTransform"):
+        """Set the positions of all CVs in the curve.
+
+        Args:
+            cvs (list): A list of `datatypes.Point` objects representing
+                new CV positions.
+            space (str): The transformation space (default is "preTransform").
+
+        Raises:
+            ValueError: If the number of provided CVs does not match
+                the curve's CV count.
+        """
+        num_cvs = self.__fn_curve.numCVs
+        if len(cvs) != num_cvs:
+            raise ValueError(
+                "Incorrect number of CVs. Expected {}, got {}.".format(
+                    num_cvs, len(cvs)
+                )
+            )
+
+        for i, cv in enumerate(cvs):
+            self.setCV(i, cv, space)
+
 
 nt.registerClass("nurbsCurve", cls=NurbsCurve)
 
@@ -718,6 +812,10 @@ class SkinCluster(_Node):
         kwargs["geometry"] = True
         kwargs["query"] = True
         return cmd.skinCluster(self, **kwargs)
+
+    def addInfluence(self, joint, weight=0):
+        cmds.skinCluster(self.name(), e=True, ai=joint, lw=True, wt=weight)
+        return True
 
     def __apimfn__(self):
         return self.__skn

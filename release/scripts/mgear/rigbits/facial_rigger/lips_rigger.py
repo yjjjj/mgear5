@@ -320,7 +320,7 @@ def rig(edge_loop="",
                 j_parent = pm.PyNode(head_joint)
             except RuntimeError:
                 j_parent = False
-        elif head_joint and isinstance(head_joint, pm.PyNode):
+        elif head_joint and isinstance(head_joint, pm.nodetypes.Joint):
             j_parent = head_joint
         else:
             j_parent = False
@@ -379,7 +379,7 @@ def rig(edge_loop="",
                 j_parent = pm.PyNode(jaw_joint)
             except RuntimeError:
                 pass
-        elif jaw_joint and isinstance(jaw_joint, pm.PyNode):
+        elif jaw_joint and isinstance(jaw_joint,  pm.nodetypes.Joint):
             j_parent = jaw_joint
         else:
             j_parent = False
@@ -421,9 +421,9 @@ def rig(edge_loop="",
     cvs = upCrv_ctl.getCVs(space="world")
     pm.progressWindow(title='Upper controls', progress=0, max=len(cvs))
 
-    v0 = transform.getTransformFromPos(cvs[0])
-    v1 = transform.getTransformFromPos(cvs[-1])
-    distSize = vector.getDistance(v0, v1) * 3
+    # v0 = transform.getTransformFromPos(cvs[0])
+    # v1 = transform.getTransformFromPos(cvs[-1])
+    distSize = vector.getDistance(cvs[0], cvs[-1]) * 3
 
     for i, cv in enumerate(cvs):
         pm.progressWindow(e=True,
@@ -438,7 +438,7 @@ def rig(edge_loop="",
         for joint in joints:
             distance = vector.getDistance(
                 transform.getTranslation(joint),
-                cv
+                cv.asVector()
             )
             if nearest_distance is None or distance < nearest_distance:
                 nearest_distance = distance
@@ -509,7 +509,7 @@ def rig(edge_loop="",
         for joint in joints:
             distance = vector.getDistance(
                 transform.getTranslation(joint),
-                cv
+                cv.asVector()
             )
             if nearest_distance is None or distance < nearest_distance:
                 nearest_distance = distance
@@ -708,7 +708,6 @@ def rig(edge_loop="",
         # in order to avoid flips lets create a reference transform
         # also to avoid flips, set any multi target parentConstraint to noFlip
         ref_cns_list = []
-        print (ref_ctls)
         for cns_ref in ref_ctls:
 
             t = transform.getTransformFromPos(

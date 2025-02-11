@@ -13,6 +13,7 @@ import json
 import maya.mel as mel
 
 import maya.OpenMaya as om
+import maya.api.OpenMaya as om2
 
 from mgear.core import applyop
 from mgear.core import utils
@@ -74,6 +75,12 @@ def addCurve(
     No Longer Returned:
         dagNode: The newly created curve.
     """
+    # Check and convert only if the item is an MPoint
+    points = [
+        [point.x, point.y, point.z] if isinstance(point, om2.MPoint) else point
+        for point in points
+    ]
+
     kwargs = {"name": name, "d": degree}
     if close:
         points.extend(points[:degree])
@@ -167,8 +174,12 @@ def createCuveFromEdges(
         axis = 1
     else:
         axis = 2
-
-    vList = pm.polyListComponentConversion(edgeList, fe=True, tv=True)
+    # conver MesEdge object to str
+    string_edge_list = [
+        str(edge) if not isinstance(edge, str) else edge for edge in edgeList
+    ]
+    vList = cmds.polyListComponentConversion(string_edge_list, fe=True, tv=True)
+    vList = cmds.ls(vList, flatten=True)
 
     centers = []
     centersOrdered = []
