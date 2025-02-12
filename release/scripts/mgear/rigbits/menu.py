@@ -29,7 +29,6 @@ def install():
         ("-----", None),
         ("Duplicate symmetrical", str_duplicateSym),
         ("-----", None),
-        ("RBF Manager", str_rbf_manager_ui),
         ("RBF Manager2", str_rbf_manager2_ui),
         ("SDK Manager (BETA)", str_SDK_manager_ui),
         ("-----", None),
@@ -182,11 +181,6 @@ rigbits.alignToPointsLoop()
 str_duplicateSym = """
 from mgear import rigbits
 rigbits.duplicateSym()
-"""
-
-str_rbf_manager_ui = """
-from mgear.rigbits import rbf_manager_ui
-rbf_manager_ui.show()
 """
 
 str_rbf_manager2_ui = """
