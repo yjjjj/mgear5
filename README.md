@@ -10,6 +10,7 @@
 # mgear 5
 mGear v.5.x.x
 
+**This version eliminates all PyMEL dependencies, ensuring mGear remains future-proof for upcoming Maya versions.**
 
 mGear is a framework for Autodesk Maya. mGear provides a set of convenient modules, tools and c++ solvers to streamline the development of rigging and animation tools.
 
@@ -24,7 +25,7 @@ Originally mGear was design and develope by Jeremie Passerin and Miquel Campos. 
 - [mGear Youtube channel](https://www.youtube.com/c/mgearriggingframework)
 - [Release Log](https://mgear4.readthedocs.io/en/latest/releaseLog.html)
 
-### [Latest release](https://github.com/mgear-dev/mgear/releases)
+### [DOWNLOAD Latest release](https://github.com/mgear-dev/mgear/releases)
 
 
 ## Documentation

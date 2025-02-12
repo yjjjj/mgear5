@@ -1,6 +1,37 @@
 Release Log
 ===========
 
+5.0.0
+------
+**New Features**
+	* New animpicker template for Metahuman (Emilio Serrano Contribution)
+	* Shiter component: chain_spring_gravity_01 (Emilio Serrano Contribution)
+
+**Enhancements**
+	* AnimPicker: Add function to re-order tabs in edit mode#419
+	* Core: dagmenu.py enhancement. Reset to bindpose, reset all SRT #224
+	* Crank: add support to use existing blendshapes nodes or creating nodes in foc #416
+	* Removed Pymel dependency and new wrapper called pymaya (Big thanks to Kim Sol for all the hard work on the wrapper!!)
+	* SDK IO adding support to blendshape nodes #434
+	* Shifter: adding Edit button on message window when custom step fails #450
+	* Spring Manager: Only keyframe relevant attributes Rotate and translate.  #420
+
+**Bug Fix**
+	* Anim Picker: Lost any tabs that haven't been converted to nurbs when you switch back to picker data. #323
+	* anim_picker: Reading data file which uses ANIM_PICKER_PATH token is not working #210
+	* Metahuman template MISC bugs #426
+	* RBF manager uses f-strings which breaks compatibility with Maya 2020 #417
+	* RBF Manager: Mirror pose not working correctly #424
+	* Shifter foot: Toes do not scale together with the fk foot #320
+	* Shifter: Error using custom_step duplicate function #213
+
+**Removed Tools**
+	* Rigbits: PostSpring
+	* Rigbits: RBF manager v1
+	* Rigbits: Rope tool
+	* Synoptic picker
+
+
 4.2.4
 ------
 
