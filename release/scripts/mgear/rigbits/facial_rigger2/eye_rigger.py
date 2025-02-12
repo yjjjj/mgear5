@@ -823,14 +823,22 @@ def rig(
         n="closeTarget_blendShape",
     )
 
-    cmds.connectAttr("{}.outputX".format(up_div_node),
-                     "{}.{}".format(bs_midUpDrive[0], lowRest_target_crv.name()))
+    cmds.connectAttr(
+        "{}.outputX".format(up_div_node),
+        "{}.{}".format(bs_midUpDrive[0], lowRest_target_crv.name()),
+    )
 
-    cmds.connectAttr("{}.outputX".format(low_div_node),
-                     "{}.{}".format(bs_midLowDrive[0], upRest_target_crv.name()))
+    cmds.connectAttr(
+        "{}.outputX".format(low_div_node),
+        "{}.{}".format(bs_midLowDrive[0], upRest_target_crv.name()),
+    )
 
-    cmds.setAttr("{}.{}".format(bs_closeTarget[0], midUpDriver_crv.name()), 0.5)
-    cmds.setAttr("{}.{}".format(bs_closeTarget[0], midLowDriver_crv.name()), 0.5)
+    cmds.setAttr(
+        "{}.{}".format(bs_closeTarget[0], midUpDriver_crv.name()), 0.5
+    )
+    cmds.setAttr(
+        "{}.{}".format(bs_closeTarget[0], midLowDriver_crv.name()), 0.5
+    )
 
     # Main crv drivers
     bs_upBlink = pm.blendShape(
@@ -853,15 +861,19 @@ def rig(
         contact_div_node.outputX, 1, 3, 0, up_div_node.outputX
     )
 
-    cmds.connectAttr("{}.outColorR".format(cond_node_up),
-                     "{}.{}".format(bs_upBlink[0], lowRest_target_crv.name()))
+    cmds.connectAttr(
+        "{}.outColorR".format(cond_node_up),
+        "{}.{}".format(bs_upBlink[0], lowRest_target_crv.name()),
+    )
 
     cond_node_low = node.createConditionNode(
         contact_div_node.outputX, 1, 3, 0, low_div_node.outputX
     )
 
-    cmds.connectAttr("{}.outColorR".format(cond_node_low),
-                     "{}.{}".format(bs_lowBlink[0], upRest_target_crv.name()))
+    cmds.connectAttr(
+        "{}.outColorR".format(cond_node_low),
+        "{}.{}".format(bs_lowBlink[0], upRest_target_crv.name()),
+    )
 
     cond_node_close = node.createConditionNode(
         contact_div_node.outputX, 1, 2, 1, 0
@@ -869,14 +881,20 @@ def rig(
 
     cmds.setAttr("{}.colorIfFalseR".format(cond_node_close), 0)
 
-    cmds.connectAttr("{}.outColorR".format(cond_node_close),
-                     "{}.{}".format(bs_upBlink[0], closeTarget_crv.name()))
+    cmds.connectAttr(
+        "{}.outColorR".format(cond_node_close),
+        "{}.{}".format(bs_upBlink[0], closeTarget_crv.name()),
+    )
 
-    cmds.connectAttr("{}.outColorR".format(cond_node_close),
-                     "{}.{}".format(bs_lowBlink[0], closeTarget_crv.name()))
+    cmds.connectAttr(
+        "{}.outColorR".format(cond_node_close),
+        "{}.{}".format(bs_lowBlink[0], closeTarget_crv.name()),
+    )
 
     cmds.setAttr("{}.{}".format(bs_upBlink[0], upProfile_target_crv.name()), 1)
-    cmds.setAttr("{}.{}".format(bs_lowBlink[0], lowProfile_target_crv.name()), 1)
+    cmds.setAttr(
+        "{}.{}".format(bs_lowBlink[0], lowProfile_target_crv.name()), 1
+    )
 
     # joints root
     jnt_root = primitive.addTransformFromPos(
