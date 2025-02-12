@@ -6,6 +6,8 @@ from mgear.core.six import string_types
 import mgear
 import mgear.pymaya as pm
 
+from maya import cmds
+
 from mgear.core import meshNavigation
 from mgear.core import curve
 from mgear.core import applyop
@@ -157,7 +159,7 @@ def rig(
                     inPos = pm.PyNode(extCorner)
                 else:
                     inPos = pm.PyNode(intCorner)
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning("%s can not be found" % intCorner)
                 return
         else:
@@ -174,7 +176,7 @@ def rig(
                 else:
                     outPos = pm.PyNode(extCorner)
                     normalVec = bboxCenter - npw
-            except pm.MayaNodeError:
+            except RuntimeError:
                 pm.displayWarning("%s can not be found" % extCorner)
                 return
         else:
@@ -305,14 +307,14 @@ def rig(
         ctlSet = "rig_controllers_grp"
     try:
         ctlSet = pm.PyNode(ctlSet)
-    except pm.MayaNodeError:
+    except RuntimeError:
         pm.sets(n=ctlSet, em=True)
         ctlSet = pm.PyNode(ctlSet)
     if not defSet:
         defSet = "rig_deformers_grp"
     try:
         defset = pm.PyNode(defSet)
-    except pm.MayaNodeError:
+    except RuntimeError:
         pm.sets(n=defSet, em=True)
         defset = pm.PyNode(defSet)
 
@@ -821,18 +823,14 @@ def rig(
         n="closeTarget_blendShape",
     )
 
-    pm.connectAttr(
-        up_div_node.outputX,
-        bs_midUpDrive[0].attr(lowRest_target_crv.name()),
-    )
+    cmds.connectAttr("{}.outputX".format(up_div_node),
+                     "{}.{}".format(bs_midUpDrive[0], lowRest_target_crv.name()))
 
-    pm.connectAttr(
-        low_div_node.outputX,
-        bs_midLowDrive[0].attr(upRest_target_crv.name()),
-    )
+    cmds.connectAttr("{}.outputX".format(low_div_node),
+                     "{}.{}".format(bs_midLowDrive[0], upRest_target_crv.name()))
 
-    pm.setAttr(bs_closeTarget[0].attr(midUpDriver_crv.name()), 0.5)
-    pm.setAttr(bs_closeTarget[0].attr(midLowDriver_crv.name()), 0.5)
+    cmds.setAttr("{}.{}".format(bs_closeTarget[0], midUpDriver_crv.name()), 0.5)
+    cmds.setAttr("{}.{}".format(bs_closeTarget[0], midLowDriver_crv.name()), 0.5)
 
     # Main crv drivers
     bs_upBlink = pm.blendShape(
@@ -854,35 +852,31 @@ def rig(
     cond_node_up = node.createConditionNode(
         contact_div_node.outputX, 1, 3, 0, up_div_node.outputX
     )
-    pm.connectAttr(
-        cond_node_up.outColorR,
-        bs_upBlink[0].attr(lowRest_target_crv.name()),
-    )
+
+    cmds.connectAttr("{}.outColorR".format(cond_node_up),
+                     "{}.{}".format(bs_upBlink[0], lowRest_target_crv.name()))
 
     cond_node_low = node.createConditionNode(
         contact_div_node.outputX, 1, 3, 0, low_div_node.outputX
     )
-    pm.connectAttr(
-        cond_node_low.outColorR,
-        bs_lowBlink[0].attr(upRest_target_crv.name()),
-    )
+
+    cmds.connectAttr("{}.outColorR".format(cond_node_low),
+                     "{}.{}".format(bs_lowBlink[0], upRest_target_crv.name()))
 
     cond_node_close = node.createConditionNode(
         contact_div_node.outputX, 1, 2, 1, 0
     )
-    cond_node_close.colorIfFalseR.set(0)
-    pm.connectAttr(
-        cond_node_close.outColorR,
-        bs_upBlink[0].attr(closeTarget_crv.name()),
-    )
 
-    pm.connectAttr(
-        cond_node_close.outColorR,
-        bs_lowBlink[0].attr(closeTarget_crv.name()),
-    )
+    cmds.setAttr("{}.colorIfFalseR".format(cond_node_close), 0)
 
-    pm.setAttr(bs_upBlink[0].attr(upProfile_target_crv.name()), 1)
-    pm.setAttr(bs_lowBlink[0].attr(lowProfile_target_crv.name()), 1)
+    cmds.connectAttr("{}.outColorR".format(cond_node_close),
+                     "{}.{}".format(bs_upBlink[0], closeTarget_crv.name()))
+
+    cmds.connectAttr("{}.outColorR".format(cond_node_close),
+                     "{}.{}".format(bs_lowBlink[0], closeTarget_crv.name()))
+
+    cmds.setAttr("{}.{}".format(bs_upBlink[0], upProfile_target_crv.name()), 1)
+    cmds.setAttr("{}.{}".format(bs_lowBlink[0], lowProfile_target_crv.name()), 1)
 
     # joints root
     jnt_root = primitive.addTransformFromPos(
@@ -899,7 +893,7 @@ def rig(
         try:
             headJnt = pm.PyNode(headJnt)
             jnt_base = headJnt
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning("Aborted can not find %s " % headJnt)
             return
     else:
@@ -1147,7 +1141,7 @@ def rig(
             if isinstance(parent_node, string_types):
                 parent_node = pm.PyNode(parent_node)
             parent_node.addChild(eye_root)
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning(
                 "The eye rig can not be parent to: %s. Maybe "
                 "this object doesn't exist." % parent_node
@@ -1293,7 +1287,7 @@ def get_eye_mesh(eyeMesh):
         try:
             eyeMesh = pm.PyNode(eyeMesh)
             return eyeMesh
-        except pm.MayaNodeError:
+        except RuntimeError:
             pm.displayWarning(
                 "The object %s can not be found in the " "scene" % (eyeMesh)
             )
