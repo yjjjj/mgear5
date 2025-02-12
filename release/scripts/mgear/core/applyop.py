@@ -13,6 +13,7 @@ Operators are any node that connected to other nodes creates a rig behaviour::
 # GLOBAL
 #############################################
 import mgear.pymaya as pm
+from maya import cmds
 from mgear.pymaya import datatypes
 
 import maya.api.OpenMaya as om
@@ -485,7 +486,9 @@ def gear_mulmatrix_op(mA, mB, target=False, transform="srt"):
     node = pm.createNode("mgear_mulMatrix")
     for m, mi in zip([mA, mB], ["matrixA", "matrixB"]):
         if isinstance(m, datatypes.Matrix):
-            pm.setAttr(node.attr(mi), m)
+            # pm.setAttr(node.attr(mi), m)
+            flat_list = [item for row in m.get() for item in row]
+            cmds.setAttr(node.attr(mi).name(), flat_list, type="matrix")
         else:
             pm.connectAttr(m, node.attr(mi))
     if target:
