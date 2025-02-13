@@ -568,8 +568,13 @@ class Rig(Main):
                         names = naming.get_component_and_relative_name(
                             compParent.name(long=None)
                         )
+
                         pName = names[0]
                         pLocal = names[1]
+                        # Handle name clashing when parsing the guide
+                        # to determine the parent component
+                        if "|" in pName:
+                            pName = pName.split("|")[-1]
                         pComp = self.components[pName]
                         self.components[name].parentComponent = pComp
                         self.components[name].parentLocalName = pLocal
