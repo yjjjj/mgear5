@@ -1,7 +1,15 @@
 Release Log
 ===========
 
-5.0.0
+5.0.2
+------
+**Bug Fix**
+	* Shifter: Handle name clashing when parsing the guide to determine the parent component #454
+	* Core: Vector: Fix calculate pole vector #455
+
+
+
+5.0.1
 ------
 **New Features**
 	* New animpicker template for Metahuman (Emilio Serrano Contribution)

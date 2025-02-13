@@ -175,7 +175,7 @@ def rotateAlongAxis(v, axis, a):
 
 def calculatePoleVector(p1, p2, p3, poleDistance=1, time=1):
     """
-    This function takes 3 PyMEL PyNodes as inputs.
+    This function takes 3  PyNodes as inputs.
     Creates a pole vector position at a "nice" distance away from a triangle
     of positions.
     Normalizes the bone lengths relative to the knee to calculate straight

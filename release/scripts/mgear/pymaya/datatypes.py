@@ -50,6 +50,29 @@ class Vector(OpenMaya.MVector):
     def __getitem__(self, item):
         return [self.x, self.y, self.z][item]
 
+    def __add__(self, other):
+        """Override addition to return a Vector instead of MVector."""
+        return Vector(super(Vector, self).__add__(other))
+
+    def __sub__(self, other):
+        """Override subtraction to return a Vector instead of MVector."""
+        return Vector(super(Vector, self).__sub__(other))
+
+    def __mul__(self, other):
+        """Override multiplication to return a Vector or scalar product."""
+        result = super(Vector, self).__mul__(other)
+        if isinstance(other, (int, float)):  # Scalar multiplication
+            return Vector(result)
+        return result  # Dot product returns a scalar
+
+    def __truediv__(self, other):
+        """Override division to return a Vector."""
+        return Vector(super(Vector, self).__truediv__(other))
+
+    def __neg__(self):
+        """Override negation to return a Vector."""
+        return Vector(super(Vector, self).__neg__())
+
     def tolist(self):
         return [self.x, self.y, self.z]
 
@@ -76,6 +99,19 @@ class Vector(OpenMaya.MVector):
                 )
         else:
             return self
+
+    def projectionOnto(self, pVector):
+        """Project this vector onto anpVector vector.
+
+        Args:
+            pVector (Vector): The vector onto which to project this vector.
+
+        Returns:
+            Vector: The projected vector.
+        """
+        pVector = Vector(pVector)  # Ensure input is a Vector
+        scale = (self * pVector) / (pVector * pVector)
+        return pVector * scale
 
 
 class Point(OpenMaya.MPoint):
