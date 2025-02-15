@@ -341,19 +341,40 @@ class _Node(base.Node):
         return "|".join([x.split(":")[-1] for x in self.name().split("|")])
 
     def attr(self, name, checkShape=True):
+        """Retrieve an attribute from the node.
+
+        Args:
+            name (str): The name of the attribute, including potential
+                        compound attributes (e.g., "translate.translateX"
+                        or "someArray[0]").
+            checkShape (bool, optional): Whether to check the shape node
+                                         if the attribute is not found.
+
+        Returns:
+            Attribute: The corresponding attribute wrapper.
+
+        Raises:
+            exception.MayaAttributeError: If the attribute does not exist.
+        """
         attr_cache = super(_Node, self).__getattribute__("_Node__attrs")
         if name in attr_cache:
             return attr_cache[name]
 
-        p = None
+        # Handle compound attributes (e.g., "translate.translateX")
+        parts = name.split(".")
+        attrname = parts[0]
+        sub_attr = parts[1] if len(parts) > 1 else None
         idx = None
-        attrname = name
-        idre = RE_ATTR_INDEX.search(name)
+
+        # Handle array attributes like "someArray[0]"
+        idre = RE_ATTR_INDEX.search(attrname)
         if idre:
-            attrname = name[: idre.start()]
-            idx = int(idre.group(1))
+            attrname = attrname[: idre.start()]
+            idx = int(idre.group(1))  # Extract the index
 
         fn_dg = super(_Node, self).__getattribute__("_Node__fn_dg")
+        p = None
+
         try:
             p = fn_dg.findPlug(attrname, False)
         except Exception:
@@ -366,17 +387,59 @@ class _Node(base.Node):
                     except:
                         pass
 
-            if p is None:
+        if p is None or p.isNull:
+            raise exception.MayaAttributeError(
+                "No '{}' attr found".format(name)
+            )
+
+        # Handle indexed attributes (arrays)
+        if idx is not None:
+            if p.isArray:
+                try:
+                    p = p.elementByLogicalIndex(idx)
+                except RuntimeError:
+                    raise exception.MayaAttributeError(
+                        "Index {} not found in attribute '{}'".format(
+                            idx, attrname
+                        )
+                    )
+            else:
                 raise exception.MayaAttributeError(
-                    "No '{}' attr found".format(name)
+                    "'{}' is not an array attribute".format(attrname)
                 )
 
-        at = attr.Attribute(p)
-        if idx is not None:
-            at = at[idx]
+        # If no sub-attribute, return the found plug
+        if not sub_attr:
+            attr_cache[name] = attr.Attribute(p)
+            return attr_cache[name]
 
-        attr_cache[name] = at
-        return at
+        # Ensure this is a compound attribute
+        attr_obj = p.attribute()
+        if not attr_obj.hasFn(OpenMaya.MFn.kCompoundAttribute):
+            raise exception.MayaAttributeError(
+                "'{}' is not a compound attribute".format(attrname)
+            )
+
+        # Get compound attribute function set
+        fn_attr = OpenMaya.MFnCompoundAttribute(attr_obj)
+
+        # Iterate through children and match names
+        found_child_plug = None
+        for i in range(fn_attr.numChildren()):
+            child_obj = fn_attr.child(i)
+            child_fn_attr = OpenMaya.MFnAttribute(child_obj)
+
+            if child_fn_attr.name == sub_attr:
+                found_child_plug = p.child(i)
+                break
+
+        if found_child_plug is None or found_child_plug.isNull:
+            raise exception.MayaAttributeError(
+                "No '{}' attr found under '{}'".format(sub_attr, attrname)
+            )
+
+        attr_cache[name] = attr.Attribute(found_child_plug)
+        return attr_cache[name]
 
     def addAttr(self, name, **kwargs):
         kwargs.pop("ln", None)
