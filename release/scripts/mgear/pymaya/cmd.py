@@ -397,6 +397,27 @@ def listConnections(*args, sourceFirst=False, **kwargs):
     return _name_to_obj(res)
 
 
+def listRelatives(*args, fullPath=True, **kwargs):
+    """Wrapper for cmds.listRelatives that ensures full path names.
+
+    Args:
+        *args: The objects whose relatives are being queried.
+        fullPath (bool, optional): Ensures the returned paths are full paths
+                                   to prevent name clashes. Default is True.
+        **kwargs: Additional arguments passed to `cmds.listRelatives`.
+
+    Returns:
+        list: A list of unique relative objects, with full paths if `fullPath=True`.
+    """
+    # Call Maya's listRelatives
+    relatives = cmds.listRelatives(*args, fullPath=fullPath, **kwargs) or []
+
+    # Ensure uniqueness
+    # unique_relatives = list(set(relatives))
+    unique_relatives = list(dict.fromkeys(relatives))
+
+    return _name_to_obj(unique_relatives)  # Convert to PyMEL or desired format
+
 def keyframe(*args, **kwargs):
     args = _obj_to_name(args)
     kwargs = _obj_to_name(kwargs)
