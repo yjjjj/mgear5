@@ -150,19 +150,28 @@ __all__.append("confirmBox")
 
 
 def _obj_to_name(arg):
+    """Convert a Maya object to its name representation.
+
+    Recursively converts items in collections. For objects of type base.Geom,
+    it returns the result of `toStringList()`. For objects of type base.Base,
+    it returns the result of `name()`.
+
+    Args:
+        arg (any): The object to convert.
+
+    Returns:
+        any: The converted name, or a collection of converted names.
+    """
     if isinstance(arg, (list, set, tuple)):
         return arg.__class__([_obj_to_name(x) for x in arg])
     elif isinstance(arg, dict):
-        newdic = {}
-        for k, v in arg.items():
-            newdic[k] = _obj_to_name(v)
-        return newdic
+        return {k: _obj_to_name(v) for k, v in arg.items()}
     elif isinstance(arg, base.Geom):
         return arg.toStringList()
     elif isinstance(arg, base.Base):
         return arg.name()
-    else:
-        return arg
+    return arg
+
 
 
 def _dt_to_value(arg):
@@ -196,28 +205,42 @@ def _dt_to_value(arg):
 
 
 def _name_to_obj(arg, scope=SCOPE_NODE, known_node=None):
+    """Convert a node name or collection of names to PyNode objects.
 
+    If the input is a collection (list, set, or tuple), the function applies
+    the conversion recursively. For a string input, it attempts to convert the
+    string to a PyNode. If the conversion fails, it returns the original string.
+
+    Args:
+        arg (any): The value to convert.
+        scope (int, optional): The scope identifier (SCOPE_NODE or SCOPE_ATTR).
+            Defaults to SCOPE_NODE.
+        known_node (str, optional): Known node name used in attribute scope.
+            Defaults to None.
+
+    Returns:
+        any: A PyNode object, a collection of PyNode objects, or the original value.
+    """
     if arg is None:
         return None
 
-    elif isinstance(arg, (list, set, tuple)):
+    if isinstance(arg, (list, set, tuple)):
         return arg.__class__(
             [_name_to_obj(x, scope=scope, known_node=known_node) for x in arg]
         )
 
-    elif isinstance(arg, str):
-        if scope == SCOPE_ATTR and known_node is not None:
-            try:
-                return bind.PyNode("{}.{}".format(known_node, arg))
-            except:
-                return arg
-        else:
-            try:
-                return bind.PyNode(arg)
-            except:
-                return arg
-    else:
-        return arg
+    if isinstance(arg, str):
+        node_name = (
+            "{}.{}".format(known_node, arg)
+            if scope == SCOPE_ATTR and known_node else arg
+        )
+        try:
+            return bind.PyNode(node_name)
+        except Exception:
+            return arg
+
+    return arg
+
 
 
 def _pymaya_cmd_wrap(func, wrap_object=True, scope=SCOPE_NODE):
