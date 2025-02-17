@@ -72,7 +72,7 @@ def _getShapes(node, **kwargs):
 
 def _getParent(node, generations=1):
     if generations == 1:
-        res = cmd.listRelatives(node, fullPath=True, p=True)
+        res = cmd.listRelatives(node, fullPath=True, p=True, c=False)
         if res:
             return res[0]
 
@@ -284,6 +284,18 @@ class _Node(base.Node):
         if isinstance(other, str):
             other = _Node(other)
         return self.__obj != other.__obj
+
+    # def __str__(self):
+    #     """"Return the node's name as a string."""
+    #     return str(self.name())  # Explicitly convert the result to str
+
+    # def __repr__(self):
+    #     """Return a string representation of the object."""
+    #     return "<_Node '{}'>".format(str(self.name()))  # Ensure it is a string
+
+    # def __unicode__(self):
+    #     """Return the node's name as a unicode string (for Python 2 compatibility)."""
+    #     return str(self.name())
 
     def object(self):
         return self.__obj
@@ -508,7 +520,7 @@ class _Node(base.Node):
         # this will ensure that return as object and not str if name clashing
         if "fullPath" not in kwargs:
             kwargs["fullPath"] = True
-        return cmd.listRelatives(self, **kwargs)
+        return cmd.listRelatives(self.name(), **kwargs)
 
     def type(self):
         return self.__fn_dg.typeName
