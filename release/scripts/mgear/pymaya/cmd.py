@@ -196,8 +196,6 @@ def _dt_to_value(arg):
 
 
 def _name_to_obj(arg, scope=SCOPE_NODE, known_node=None):
-    # lazy importing
-    from . import bind
 
     if arg is None:
         return None
@@ -416,7 +414,8 @@ def listRelatives(*args, fullPath=True, **kwargs):
     # unique_relatives = list(set(relatives))
     unique_relatives = list(dict.fromkeys(relatives))
 
-    return _name_to_obj(unique_relatives)  # Convert to PyMEL or desired format
+    return _name_to_obj(unique_relatives)
+
 
 def keyframe(*args, **kwargs):
     args = _obj_to_name(args)
