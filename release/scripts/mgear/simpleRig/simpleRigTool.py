@@ -178,7 +178,7 @@ def _create_control(
     attribute.addAttribute(ctl, "conf_color", "long", color, keyable=False)
     attribute.addAttribute(ctl, CTL_TAG_ATTR, "bool", True, keyable=False)
     attribute.addAttribute(ctl, "edit_mode", "bool", False, keyable=False)
-    pm.parent(ctl, npo)
+    # pm.parent(ctl, npo)
     attribute.setKeyableAttributes(ctl)
 
     if driven:
@@ -1721,6 +1721,7 @@ class simpleRigTool(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         _delete_rig()
 
     # @utils.one_undo
+    @utils.timeFunc
     def auto_rig(self):
         oSel = pm.selected()
         if oSel and len(oSel) == 1:
