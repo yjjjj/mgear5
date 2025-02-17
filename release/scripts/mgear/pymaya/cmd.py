@@ -7,7 +7,7 @@ from maya.api import OpenMaya
 import functools
 import inspect
 import pprint
-
+from . import bind
 
 __all__ = []
 __DO_NOT_CAST_FUNCS = set()
@@ -395,26 +395,202 @@ def listConnections(*args, sourceFirst=False, **kwargs):
     return _name_to_obj(res)
 
 
-def listRelatives(*args, fullPath=True, **kwargs):
-    """Wrapper for cmds.listRelatives that ensures full path names.
+def _listRelatives(
+    dag_path,
+    allDescendents=False,
+    children=False,
+    parent=False,
+    fullPath=True,
+    path=False,
+    shapes=False,
+    noIntermediate=False,
+    type=None,
+):
+    """Internal implementation of listRelatives using maya.api.OpenMaya.
+
+    This function implements the logic similar to cmds.listRelatives.
 
     Args:
-        *args: The objects whose relatives are being queried.
-        fullPath (bool, optional): Ensures the returned paths are full paths
-                                   to prevent name clashes. Default is True.
-        **kwargs: Additional arguments passed to `cmds.listRelatives`.
+        dag_path (str): Name of the DAG node.
+        allDescendents (bool): If True, recursively lists all descendants.
+        children (bool): If True, lists only immediate children.
+        parent (bool): If True, returns the parent of the node.
+        fullPath (bool): If True, returns full DAG paths.
+        path (bool): Alias for fullPath.
+        shapes (bool): If True, filters for shape nodes.
+        noIntermediate (bool): If True, excludes intermediate objects.
+        type (str): Filter nodes by this type (e.g., "mesh", "nurbsCurve").
 
     Returns:
-        list: A list of unique relative objects, with full paths if `fullPath=True`.
+        list: List of node names matching the criteria.
     """
-    # Call Maya's listRelatives
-    relatives = cmds.listRelatives(*args, fullPath=fullPath, **kwargs) or []
+    # If "path" flag is True, treat it as fullPath.
+    if path:
+        fullPath = True
 
-    # Ensure uniqueness
-    # unique_relatives = list(set(relatives))
-    unique_relatives = list(dict.fromkeys(relatives))
+    # Default behavior is children if no traversal flag is set.
+    if not (parent or allDescendents or children):
+        children = True
 
-    return _name_to_obj(unique_relatives)
+    sel_list = OpenMaya.MSelectionList()
+
+    if not isinstance(dag_path, str):
+        dag_path = dag_path.longName()
+    try:
+        sel_list.add(dag_path)
+    except RuntimeError:
+        OpenMaya.MGlobal.displayWarning(
+            "Node '{}' does not exist.".format(dag_path)
+        )
+        return []
+
+    try:
+        dag_path_obj = sel_list.getDagPath(0)
+    except Exception:
+        OpenMaya.MGlobal.displayWarning(
+            "Unable to get DAG path for '{}'.".format(dag_path)
+        )
+        return []
+
+    # Verify the node is a DAG node.
+    dag_node = dag_path_obj.node()
+    if not dag_node.hasFn(OpenMaya.MFn.kDagNode):
+        OpenMaya.MGlobal.displayWarning(
+            "'{}' is not a DAG node.".format(dag_path)
+        )
+        return []
+
+    dag_fn = OpenMaya.MFnDagNode(dag_path_obj)
+    result_nodes = []
+
+    # If parent flag is set, return parent (if any) and exit.
+    if parent:
+        if dag_fn.parentCount() > 0:
+            parent_obj = dag_fn.parent(0)
+            if not parent_obj.isNull():
+                parent_fn = OpenMaya.MFnDagNode(parent_obj)
+                node_name = (
+                    parent_fn.fullPathName() if fullPath else parent_fn.name()
+                )
+                result_nodes.append(node_name)
+        return _name_to_obj(result_nodes)
+
+    def process_node(node_obj):
+        """Process a node and return its name if it passes filters.
+
+        Args:
+            node_obj (MObject): Maya node object.
+
+        Returns:
+            str or None: Node name if node passes filters, else None.
+        """
+        try:
+            node_fn = OpenMaya.MFnDagNode(node_obj)
+        except Exception:
+            return None
+
+        if shapes:
+            if not node_fn.object().hasFn(OpenMaya.MFn.kShape):
+                return None
+
+        if type is not None:
+            if node_fn.typeName != type:
+                return None
+
+        if noIntermediate and node_fn.isIntermediateObject:
+            return None
+
+        return node_fn.fullPathName() if fullPath else node_fn.name()
+
+    def traverse(node_fn):
+        """Recursively traverse children of a node.
+
+        Args:
+            node_fn (MFnDagNode): Function set for a DAG node.
+        """
+        for i in range(node_fn.childCount()):
+            child_obj = node_fn.child(i)
+            if not child_obj.isNull():
+                node_name = process_node(child_obj)
+                if node_name is not None:
+                    result_nodes.append(node_name)
+                traverse(OpenMaya.MFnDagNode(child_obj))
+
+    if allDescendents:
+        traverse(dag_fn)
+    else:
+        # Only immediate children.
+        for i in range(dag_fn.childCount()):
+            child_obj = dag_fn.child(i)
+            if not child_obj.isNull():
+                node_name = process_node(child_obj)
+                if node_name is not None:
+                    result_nodes.append(node_name)
+
+    return _name_to_obj(result_nodes)
+
+
+def listRelatives(*args, **kwargs):
+    """Wrapper for _listRelatives that accepts short and long argument names.
+
+    This function converts short keyword arguments to their corresponding long
+    names and then calls the internal _listRelatives implementation.
+
+    Args:
+        *args: Positional arguments. The first positional argument must be the
+            DAG node name.
+        **kwargs: Keyword arguments that may include short or long names.
+
+    Returns:
+        list: List of node names matching the criteria.
+    """
+    # Mapping from short argument names to long names.
+    short_to_long = {
+        "ad": "allDescendents",
+        "c": "children",
+        "p": "parent",
+        "fp": "fullPath",
+        "s": "shapes",
+        "ni": "noIntermediate",
+        "t": "type",
+    }
+    # Convert short names in kwargs to long names.
+    for key in list(kwargs):
+        if key in short_to_long:
+            long_key = short_to_long[key]
+            if long_key not in kwargs:
+                kwargs[long_key] = kwargs.pop(key)
+            else:
+                kwargs.pop(key)
+
+    # Extract dag_path from positional args or kwargs.
+    if args:
+        dag_path = args[0]
+        new_args = (dag_path,)
+    else:
+        dag_path = kwargs.pop("dag_path", None)
+        new_args = (dag_path,)
+    if dag_path is None:
+        raise ValueError(
+            "dag_path must be provided as a positional or keyword argument."
+        )
+
+    # Set default values if not provided.
+    defaults = {
+        "allDescendents": False,
+        "children": False,
+        "parent": False,
+        "fullPath": True,
+        "path": False,
+        "shapes": False,
+        "noIntermediate": False,
+        "type": None,
+    }
+    for key, value in defaults.items():
+        if key not in kwargs:
+            kwargs[key] = value
+
+    return _listRelatives(dag_path, **kwargs)
 
 
 def keyframe(*args, **kwargs):
