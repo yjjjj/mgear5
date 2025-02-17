@@ -1,11 +1,11 @@
 from maya import cmds
 import re
 from . import base
+from . import node
+from . import geometry
 
 
 def __find_attr(name):
-    from . import node
-    from . import attr
 
     nspts = re.split("[.]", name)
     cur = node.BindNode(nspts[0])
@@ -36,9 +36,6 @@ def PyNode(name_or_node):
     Raises:
         RuntimeError: If the node or attribute does not exist in the scene.
     """
-    from . import node
-    from . import attr
-    from . import geometry
 
     # If the input is already a Base type, return it directly
     if isinstance(name_or_node, base.Base):
