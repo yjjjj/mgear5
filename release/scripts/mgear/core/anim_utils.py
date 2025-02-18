@@ -1793,9 +1793,9 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         # show up
         # if versions.current() <= 20180200:
         pm.cycleCheck(e=False)
-        pm.displayWarning(
-            "Maya version older than: 2016.5: " "CycleCheck temporal turn OFF"
-        )
+        # pm.displayWarning(
+        #     "Maya version older than: 2016.5: " "CycleCheck temporal turn OFF"
+        # )
 
         channels = ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz"]
 
@@ -1965,10 +1965,17 @@ class IkFkTransfer(AbstractAnimationTransfer):
         # type: () -> float
         if self.comboBoxSpaces.currentIndex() == 0:
             # IK
-            return 1.0
+            if self.getChangeAttrName().endswith("_Switch"):
+                return 0.0
+            else:
+                return 1.0
         else:
             # FK
-            return 0.0
+            if self.getChangeAttrName().endswith("_Switch"):
+                return 1.0
+            else:
+                return 0.0
+
 
     def _getNode(self, name):
         # type: (str) -> pm.nodetypes.Transform
