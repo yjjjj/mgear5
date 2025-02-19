@@ -1,6 +1,25 @@
 Release Log
 ===========
 
+5.0.3
+------
+
+**Enhancements**
+	* Core: Skin IO: review logic to increase performance closes #456
+	* PyMaya: cmd update lazy import
+	* PyMaya: New List relatives implementation using api.OpenMaya #452
+	* PyMaya: Node get parent and list relatives update #452
+	* PyMaya: Node.attr: improve implementation to support compound attrs and indexed attrs closes #459
+	* PyMaya: optimize _obj_to_name and _name_to_obj #263
+	* SimpleRig: clean up  #452
+	* Vendor plugin: Update SHAPES weightdriver plugin to the latest kernel version: from Maya 2020 to 2025
+
+**Bug Fix**
+	* Core: anim_utils: Fix support for _switch space naming. for IK/FK match range #445
+	* Shifter: Delete Rig + Keep Joints functionality fails fixes #457
+	* Shifter: Pyside6 update: fix component settings import #409
+
+
 5.0.2
 ------
 **Bug Fix**
