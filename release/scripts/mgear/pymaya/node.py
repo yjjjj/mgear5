@@ -285,17 +285,17 @@ class _Node(base.Node):
             other = _Node(other)
         return self.__obj != other.__obj
 
-    # def __str__(self):
-    #     """"Return the node's name as a string."""
-    #     return str(self.name())  # Explicitly convert the result to str
+    def __str__(self):
+        """Return the long name of the node as a string."""
+        return self.longName()
 
-    # def __repr__(self):
-    #     """Return a string representation of the object."""
-    #     return "<_Node '{}'>".format(str(self.name()))  # Ensure it is a string
+    def __repr__(self):
+        """Return a string representation of the object."""
+        return "<_Node '{}'>".format(self.longName())
 
-    # def __unicode__(self):
-    #     """Return the node's name as a unicode string (for Python 2 compatibility)."""
-    #     return str(self.name())
+    def __unicode__(self):
+        """Return the long name of the node as a unicode string (for Python 2)."""
+        return self.longName()
 
     def object(self):
         return self.__obj
