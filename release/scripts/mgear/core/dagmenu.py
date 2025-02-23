@@ -212,9 +212,11 @@ def __range_switch_callback(*args):
 
     # ik_controls, fk_controls = _get_controls(switch_control, blend_attr)
     # search criteria to find all the components sharing the blend
-    # criteria = blend_attr.replace(blend_attr_ext, "") + "_id*_ctl_cnx"
-    # TODO: Not working correctly if attr is not _blend. i.e. "_Switch" will fail
-    criteria = "*_id*_ctl_cnx"
+    if "_Switch" in blend_attr:
+        criteria = "*_id*_ctl_cnx"
+    else:
+        criteria = blend_attr.replace("_blend", "") + "_id*_ctl_cnx"
+    #     component_ctl = [x for x in component_ctl if "leg" in x or "arm" in x]
     component_ctl = (
         cmds.listAttr(switch_control, ud=True, string=criteria) or []
     )
