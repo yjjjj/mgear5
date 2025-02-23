@@ -895,6 +895,113 @@ def getComboKeys(model, object_name, combo_attr):
 # IK FK switch match
 ##################################################
 # ================================================
+def ikFkMatch_with_namespace2(
+    namespace,
+    ikfk_attr,
+    ui_host,
+    fk_controls,
+    ik_controls,
+    keyframe=None,
+    ik_val=False,
+    fk_val=True,
+):
+
+    # returns a pymel node on the given name
+    def _get_node(name):
+        # type: (str) -> pm.nodetypes.Transform
+        name = stripNamespace(name)
+        if namespace:
+            node = getNode(":".join([namespace, name]))
+        else:
+            node = getNode(name)
+
+        if not node:
+            mgear.log("Can't find object : {0}".format(name), mgear.sev_error)
+
+        return node
+
+    # returns matching node
+    def _get_mth(name):
+        # type: (str) -> pm.nodetypes.Transform
+        node = _get_node(name)
+        if node.hasAttr("match_ref"):
+            match_node = node.match_ref.listConnections()
+            if match_node:
+                return match_node[0]
+        else:
+            tmp = name.split("_")
+            tmp[-1] = "mth"
+            return _get_node("_".join(tmp))
+
+
+    # get elements to match
+    fk_ctrls = [_get_node(x) for x in fk_controls]
+    fk_targets = [_get_mth(x) for x in fk_controls]
+
+    ik_ctrl = {
+        key: _get_node(value) for key, value in ik_controls.items()
+    }
+    ik_targets = {
+        key: _get_mth(value) for key, value in ik_controls.items()
+    }
+
+    # get inital value
+    ui_node = _get_node(ui_host)
+    o_attr = ui_node.attr(ikfk_attr)
+
+    # if already keyframe we always set keyframes
+    if pm.keyframe(o_attr, query=True, keyframeCount=True):
+        keyframe = True
+
+    val = o_attr.get()
+
+    # get ik values as list
+    ik_controls_list = list(ik_controls.values())
+
+    # sets keyframes before snapping
+    if keyframe:
+        _all_controls = []
+        _all_controls.extend(fk_controls)
+        _all_controls.extend(ik_controls_list)
+        _all_controls.extend([o_attr])
+        [
+            cmds.setKeyframe(
+                "{}".format(elem), time=(cmds.currentTime(query=True) - 1.0)
+            )
+            for elem in _all_controls
+        ]
+
+    # if is IK then snap FK
+    if val == ik_val:
+
+        for target, ctl in zip(fk_targets, fk_ctrls):
+            transform.matchWorldTransform(target, ctl)
+        pm.setAttr(o_attr, fk_val)
+
+    # if is FK then snap IK
+    elif val == fk_val:
+        transform.matchWorldTransform(ik_targets["ik_control"], ik_ctrl["ik_control"])
+        transform.matchWorldTransform(ik_targets["pole_vector"], ik_ctrl["pole_vector"])
+        try:
+            transform.matchWorldTransform(ik_targets["toes_ik"], ik_ctrl["toes_ik"])
+            transform.matchWorldTransform(ik_targets["toeRollIk"], ik_ctrl["toeRollIk"])
+            transform.matchWorldTransform(ik_targets["heelIk"], ik_ctrl["heelIk"])
+        except KeyError:
+            pass
+        pm.setAttr(o_attr, ik_val)
+
+    # sets keyframes
+    if keyframe:
+        [
+            cmds.setKeyframe(
+                "{}".format(elem), time=(cmds.currentTime(query=True))
+            )
+            for elem in _all_controls
+        ]
+    cmds.dgdirty(a=True)
+
+
+    return
 
 
 def ikFkMatch_with_namespace(
@@ -968,7 +1075,6 @@ def ikFkMatch_with_namespace(
 
     # end of workaround gimbal match
     # -----------------------------------------------
-
     # returns a pymel node on the given name
     def _get_node(name):
         # type: (str) -> pm.nodetypes.Transform
@@ -995,7 +1101,6 @@ def ikFkMatch_with_namespace(
             tmp = name.split("_")
             tmp[-1] = "mth"
             return _get_node("_".join(tmp))
-
     # get things ready
     fk_ctrls = [_get_node(x) for x in fks]
     fk_targets = [_get_mth(x) for x in fks]
@@ -1438,6 +1543,7 @@ def calculateMirrorData(srcNode, targetNode, flip=False):
             }
         )
     return results
+
 
 def mirrorPoseOld(flip=False, nodes=False):
     """Deprecated: Mirror pose
@@ -1984,7 +2090,6 @@ class IkFkTransfer(AbstractAnimationTransfer):
             else:
                 return 0.0
 
-
     def _getNode(self, name):
         # type: (str) -> pm.nodetypes.Transform
         node = getNode(":".join([self.nameSpace, name]))
@@ -2058,7 +2163,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
         ikRot,
         switchTo=None,
         *args,
-        **kargs
+        **kargs,
     ):
         # type: (int, int, bool, str, *str, **str) -> None
 

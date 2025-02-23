@@ -23,6 +23,7 @@ from mgear.core.anim_utils import mirrorPose
 from mgear.core.anim_utils import get_host_from_node
 from mgear.core.anim_utils import change_rotate_order
 from mgear.core.anim_utils import ikFkMatch_with_namespace
+from mgear.core.anim_utils import ikFkMatch_with_namespace2
 from mgear.core.anim_utils import get_ik_fk_controls
 from mgear.core.anim_utils import get_ik_fk_controls_by_role
 from mgear.core.anim_utils import IkFkTransfer
@@ -318,22 +319,33 @@ def __switch_fkik_callback(*args):
 
     # search criteria to find all the components sharing the blend
     # criteria = blend_attr.replace(blend_attr_ext, "") + "_id*_ctl_cnx"
-    criteria = "*_id*_ctl_cnx"
-    component_ctl = (
-        cmds.listAttr(switch_control, ud=True, string=criteria) or []
-    )
-    blend_fullname = "{}.{}".format(switch_control, blend_attr)
-    if blend_attr_ext == "_blend":
-        ik_val = 1.0
-        fk_val = 0.0
-    else:
+    # criteria = "*_id*_ctl_cnx"
+    if "_Switch" in blend_attr:
+        criteria = "*_id*_ctl_cnx"
+        component_ctl = (
+            cmds.listAttr(switch_control, ud=True, string=criteria) or []
+        )
+        print("component_ctl----------------------")
+        print(component_ctl)
+        blend_fullname = "{}.{}".format(switch_control, blend_attr)
+        # if blend_attr_ext == "_blend":
+        #     ik_val = 1.0
+        #     fk_val = 0.0
+        # else:
         ik_val = False
         fk_val = True
-    for i, comp_ctl_list in enumerate(component_ctl):
+        ik_controls_complete_dict = {}
+        fk_controls_complete_list = []
+        for i, comp_ctl_list in enumerate(component_ctl):
 
-        ik_controls, fk_controls = get_ik_fk_controls_by_role(
-            switch_control, comp_ctl_list
-        )
+            ik_controls, fk_controls = get_ik_fk_controls_by_role(
+                switch_control, comp_ctl_list
+            )
+            fk_controls_complete_list = fk_controls_complete_list + fk_controls
+            filtered_ik_controls = {k: v for k, v in ik_controls.items() if v is not None}
+            ik_controls_complete_dict.update(filtered_ik_controls)
+        print(ik_controls_complete_dict)
+        print(fk_controls_complete_list)
         init_val = None
         if ik_controls["ik_control"] and fk_controls:
             # we need to set the original blend value for each ik/fk match
@@ -341,20 +353,58 @@ def __switch_fkik_callback(*args):
                 init_val = cmds.getAttr(blend_fullname)
             else:
                 cmds.setAttr(blend_fullname, init_val)
-            # runs switch
-            ikFkMatch_with_namespace(
-                namespace=namespace,
-                ikfk_attr=blend_attr,
-                ui_host=switch_control,
-                fks=fk_controls,
-                ik=ik_controls["ik_control"],
-                upv=ik_controls["pole_vector"],
-                ik_rot=ik_controls["ik_rot"],
-                key=keyframe,
-                ik_controls=ik_controls,
-                ik_val=ik_val,
-                fk_val=fk_val,
+        # runs switch
+        ikFkMatch_with_namespace2(
+            namespace=namespace,
+            ikfk_attr=blend_attr,
+            ui_host=switch_control,
+            fk_controls=fk_controls_complete_list,
+            ik_controls=ik_controls_complete_dict,
+            keyframe=keyframe,
+            ik_val=ik_val,
+            fk_val=fk_val,
+        )
+
+    else:  # _blend attr system
+        criteria = blend_attr.replace("_blend", "") + "_id*_ctl_cnx"
+        component_ctl = (
+            cmds.listAttr(switch_control, ud=True, string=criteria) or []
+        )
+        print("component_ctl----------------------")
+        print(component_ctl)
+        blend_fullname = "{}.{}".format(switch_control, blend_attr)
+        ik_val = 1.0
+        fk_val = 0.0
+        # if blend_attr_ext == "_blend":
+        # else:
+        #     ik_val = False
+        #     fk_val = True
+        for i, comp_ctl_list in enumerate(component_ctl):
+
+            ik_controls, fk_controls = get_ik_fk_controls_by_role(
+                switch_control, comp_ctl_list
             )
+            init_val = None
+            if ik_controls["ik_control"] and fk_controls:
+                # we need to set the original blend value for each ik/fk match
+                if not init_val:
+                    init_val = cmds.getAttr(blend_fullname)
+                else:
+                    cmds.setAttr(blend_fullname, init_val)
+                # runs switch
+                ikFkMatch_with_namespace(
+                    namespace=namespace,
+                    ikfk_attr=blend_attr,
+                    ui_host=switch_control,
+                    fks=fk_controls,
+                    ik=ik_controls["ik_control"],
+                    upv=ik_controls["pole_vector"],
+                    ik_rot=ik_controls["ik_rot"],
+                    key=keyframe,
+                    ik_controls=ik_controls,
+                    ik_val=ik_val,
+                    fk_val=fk_val,
+                )
 
 
 def __switch_parent_callback(*args):
