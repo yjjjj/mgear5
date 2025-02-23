@@ -408,7 +408,8 @@ def getNode(nodeName):
     try:
         return pm.PyNode(nodeName)
 
-    except pm.MayaNodeError:
+    except (pm.MayaNodeError, RuntimeError):
+        print(f"Not found node:{nodeName} ")
         return None
 
 
