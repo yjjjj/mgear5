@@ -343,6 +343,13 @@ def get_ik_fk_controls_by_role(uiHost, attr_ctl_cnx):
                     ik_controls["ik_rot"] = c.stripNamespace()
                 elif role == "roll":
                     ik_controls["roll"] = c.stripNamespace()
+                # _Swift case
+                elif role == "toes_ik":
+                    ik_controls["toes_ik"] = c.stripNamespace()
+                elif role == "heelIk":
+                    ik_controls["heelIk"] = c.stripNamespace()
+                elif role == "toeRollIk":
+                    ik_controls["toeRollIk"] = c.stripNamespace()
 
     # fk_controls = sorted(fk_controls)
     return ik_controls, fk_controls
