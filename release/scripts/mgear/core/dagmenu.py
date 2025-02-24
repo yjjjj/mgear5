@@ -222,34 +222,37 @@ def __range_switch_callback(*args):
         cmds.listAttr(switch_control, ud=True, string=criteria) or []
     )
     if component_ctl:
-        ik_list = []
+        # ik_list = []
+        # fk_list = []
+        # NOTE: with the new implemantation provably ikRot_list and upc_list
+        # are not needed anymore since the controls will be passed with the
+        #  ik_controls_complete_dict and fk_controls_complete_list
         ikRot_list = []
-        fk_list = []
         upv_list = []
 
-        for com_list in component_ctl:
-            # set the initial val for the blend attr in each iteration
+        ik_controls_complete_dict = {}
+        fk_controls_complete_list = []
+        for i, comp_ctl_list in enumerate(component_ctl):
+
             ik_controls, fk_controls = get_ik_fk_controls_by_role(
-                switch_control, com_list
+                switch_control, comp_ctl_list
             )
-            # we need to ensure there is ik_control. Before was not needed
-            # when used _blend + ciriteria, but now we can get non existing
-            # elements, to avoid error we check if exists
-            if ik_controls["ik_control"]:
-                ik_list.append(ik_controls["ik_control"])
-            if ik_controls["ik_rot"]:
-                ikRot_list.append(ik_controls["ik_rot"])
-            if ik_controls["pole_vector"]:
-                upv_list.append(ik_controls["pole_vector"])
-            fk_list = fk_list + fk_controls
+            fk_controls_complete_list = fk_controls_complete_list + fk_controls
+            filtered_ik_controls = {k: v for k, v in ik_controls.items() if v is not None}
+            ik_controls_complete_dict.update(filtered_ik_controls)
+
+        ik_controls_complete_list = list(ik_controls_complete_dict.values())
+        print(ik_controls_complete_dict)
+        print(ik_controls_complete_list)
+        print(fk_controls_complete_list)
 
         # calls the ui
         range_switch.showUI(
             model=root,
             ikfk_attr=blend_attr,
             uihost=stripNamespace(switch_control),
-            fks=fk_list,
-            ik=ik_list,
+            fks=fk_controls_complete_list,
+            ik=ik_controls_complete_list,
             upv=upv_list,
             ikRot=ikRot_list,
         )

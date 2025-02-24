@@ -2219,6 +2219,9 @@ class IkFkTransfer(AbstractAnimationTransfer):
             onlyKeyframes,
             definition,
         )
+        # fore evaluation after execution to refresh the viewport
+        # cmds.dgdirty(a=True)
+        cmds.currentTime(cmds.currentTime(q=True))
 
     # ----------------------------------------------------------------
     # re implement doItbyUI to have access to self.hasIKrot option
