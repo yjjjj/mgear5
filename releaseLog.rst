@@ -1,6 +1,12 @@
 Release Log
 ===========
 
+5.0.4
+------
+**Bug Fix**
+	* Anim_utils: IK/FK matching and Range Transfer misc Fixes and enhancements #445
+	* PyMaya: PyMaya Node return implicit longName #263
+
 5.0.3
 ------
 
