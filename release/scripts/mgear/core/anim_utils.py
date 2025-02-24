@@ -949,14 +949,17 @@ def ikFkMatch_with_namespace2(
     ui_node = _get_node(ui_host)
     o_attr = ui_node.attr(ikfk_attr)
 
+    # get ik values as list
+    ik_controls_list = list(ik_controls.values())
+
     # if already keyframe we always set keyframes
-    if pm.keyframe(o_attr, query=True, keyframeCount=True):
-        keyframe = True
+    for c in [o_attr]+ fk_ctrls + ik_controls_list:
+        if pm.keyframe(c, query=True, keyframeCount=True):
+            keyframe = True
+            break
 
     val = o_attr.get()
 
-    # get ik values as list
-    ik_controls_list = list(ik_controls.values())
 
     # sets keyframes before snapping
     if keyframe:
