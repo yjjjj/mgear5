@@ -1405,7 +1405,7 @@ def getMirrorTarget(nameSpace=None, node=None):
 
     if isSideElement(node.name()):
         nameParts = stripNamespace(node.name()).split("|")[-1]
-        nameParts = swapSideLabelNode(nameParts)
+        nameParts = swapSideLabelNode(node.name())
         if nameSpace:
             nameTarget = ":".join([nameSpace, nameParts])
         else:
