@@ -111,7 +111,7 @@ def _get_driven_attr_next_available_index(d_attr):
 
 # creators ===========================================
 
-@utils.timeFunc
+# @utils.timeFunc
 def _create_control(
     name,
     t,
@@ -143,7 +143,7 @@ def _create_control(
         dagNode: New control
     """
     name = _validate_name(name)
-    @utils.timeFunc
+    # @utils.timeFunc
     def _set_name(extension):
         if side:
             fullName = "{}_{}{}_{}".format(name, side, str(indx), extension)
@@ -262,7 +262,7 @@ def _create_base_structure(rigName):
 
 
 @utils.one_undo
-@utils.timeFunc
+# @utils.timeFunc
 def _create_simple_rig_root(
     rigName=RIG_ROOT,
     selection=None,
@@ -390,7 +390,7 @@ def _create_simple_rig_root(
 
 
 @utils.one_undo
-@utils.timeFunc
+# @utils.timeFunc
 def _create_custom_pivot(
     name, side, icon, yZero, selection=None, parent=None, sets_config=None
 ):
@@ -504,7 +504,7 @@ def connect_selectable(rig, selection):
         )
         e.attr("overrideDisplayType").set(2)
 
-@utils.timeFunc
+# @utils.timeFunc
 def _get_children(dagNode):
     """Get all children node
 
@@ -518,7 +518,7 @@ def _get_children(dagNode):
     children = dagNode.listRelatives(allDescendents=True, type="transform")
     return children
 
-@utils.timeFunc
+# @utils.timeFunc
 def _get_bbox_data(obj=None, yZero=True, *args):
     """Calculate the bounding box data
 
@@ -547,7 +547,7 @@ def _get_bbox_data(obj=None, yZero=True, *args):
         return volCenter, radio, bb
     return volCenter, None, None
 
-@utils.timeFunc
+# @utils.timeFunc
 def _get_branch_bbox_data(selection=None, yZero=True, *args):
     """Get the bounding box from a hierachy branch
 
@@ -694,7 +694,7 @@ def _collect_configuration_from_rig():
 
 
 # @utils.one_undo
-@utils.timeFunc
+# @utils.timeFunc
 def _build_rig_from_model(
     dagNode,
     rigName=RIG_ROOT,

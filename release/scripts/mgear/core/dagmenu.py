@@ -242,9 +242,6 @@ def __range_switch_callback(*args):
             ik_controls_complete_dict.update(filtered_ik_controls)
 
         ik_controls_complete_list = list(ik_controls_complete_dict.values())
-        print(ik_controls_complete_dict)
-        print(ik_controls_complete_list)
-        print(fk_controls_complete_list)
 
         # calls the ui
         range_switch.showUI(
@@ -259,7 +256,6 @@ def __range_switch_callback(*args):
 
 
 def __reset_all_transforms_callback(controls, *args):
-    print(controls)
     for c in controls:
         resetTransform(c, t=True, r=True, s=True)
 
@@ -328,8 +324,6 @@ def __switch_fkik_callback(*args):
         component_ctl = (
             cmds.listAttr(switch_control, ud=True, string=criteria) or []
         )
-        print("component_ctl----------------------")
-        print(component_ctl)
         blend_fullname = "{}.{}".format(switch_control, blend_attr)
         # if blend_attr_ext == "_blend":
         #     ik_val = 1.0
@@ -347,8 +341,6 @@ def __switch_fkik_callback(*args):
             fk_controls_complete_list = fk_controls_complete_list + fk_controls
             filtered_ik_controls = {k: v for k, v in ik_controls.items() if v is not None}
             ik_controls_complete_dict.update(filtered_ik_controls)
-        print(ik_controls_complete_dict)
-        print(fk_controls_complete_list)
         init_val = None
         if ik_controls["ik_control"] and fk_controls:
             # we need to set the original blend value for each ik/fk match
@@ -373,8 +365,6 @@ def __switch_fkik_callback(*args):
         component_ctl = (
             cmds.listAttr(switch_control, ud=True, string=criteria) or []
         )
-        print("component_ctl----------------------")
-        print(component_ctl)
         blend_fullname = "{}.{}".format(switch_control, blend_attr)
         ik_val = 1.0
         fk_val = 0.0
@@ -547,7 +537,7 @@ def __space_transfer_callback(*args):
     switch_attr = args[1]
     combo_box = args[2]
     search_token = switch_attr.split("_")[-1].split("ref")[0].split("Ref")[0]
-    print(search_token)
+    # print(search_token)
     target_control = None
 
     # control_01 attr don't standard name ane need to be check
