@@ -969,7 +969,7 @@ def ikFkMatch_with_namespace2(
         _all_controls.extend([o_attr])
         [
             cmds.setKeyframe(
-                "{}".format(elem), time=(cmds.currentTime(query=True) - 1.0)
+                "{}".format(_get_node(elem)), time=(cmds.currentTime(query=True) - 1.0)
             )
             for elem in _all_controls
         ]
@@ -997,7 +997,7 @@ def ikFkMatch_with_namespace2(
     if keyframe:
         [
             cmds.setKeyframe(
-                "{}".format(elem), time=(cmds.currentTime(query=True))
+                "{}".format(_get_node(elem)), time=(cmds.currentTime(query=True))
             )
             for elem in _all_controls
         ]
