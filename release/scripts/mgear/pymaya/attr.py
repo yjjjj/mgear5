@@ -338,3 +338,16 @@ class Attribute(base.Attr):
                 count += 1
 
         return count
+
+    def index(self):
+        """Return the index of a multi-attribute element if present.
+
+        Returns:
+            int or None: The index of the attribute element if present,
+                otherwise None.
+        """
+        attr_name = self.name()
+        match = re.search(r"\[(\d+)\]$", attr_name)
+        if match:
+            return int(match.group(1))
+        return None
