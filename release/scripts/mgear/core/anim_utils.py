@@ -1933,9 +1933,15 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
             startFrame, endFrame, val_src_nodes, poleVectorMatrices
         )
 
-        keyframeList = sorted(
-            set(pm.keyframe(key_src_nodes, at=["t", "r", "s"], q=True))
-        )
+        src_keys = pm.keyframe(key_src_nodes, at=["t", "r", "s"], q=True)
+        if src_keys:
+
+            keyframeList = sorted(
+                set(src_keys)
+            )
+        else:
+            pm.displayWarning("No keys to transfer.")
+            return
 
         # delete animation in the space switch channel and destination ctrls
         pm.cutKey(key_dst_nodes, at=channels, time=(startFrame, endFrame))
@@ -1960,7 +1966,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
 
         # if versions.current() <= 20180200:
         pm.cycleCheck(e=True)
-        pm.displayWarning("CycleCheck turned back ON")
+        # pm.displayWarning("CycleCheck turned back ON")
 
 
 # ================================================
