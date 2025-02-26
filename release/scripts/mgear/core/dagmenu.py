@@ -238,7 +238,9 @@ def __range_switch_callback(*args):
                 switch_control, comp_ctl_list
             )
             fk_controls_complete_list = fk_controls_complete_list + fk_controls
-            filtered_ik_controls = {k: v for k, v in ik_controls.items() if v is not None}
+            filtered_ik_controls = {
+                k: v for k, v in ik_controls.items() if v is not None
+            }
             ik_controls_complete_dict.update(filtered_ik_controls)
 
         ik_controls_complete_list = list(ik_controls_complete_dict.values())
@@ -339,7 +341,9 @@ def __switch_fkik_callback(*args):
                 switch_control, comp_ctl_list
             )
             fk_controls_complete_list = fk_controls_complete_list + fk_controls
-            filtered_ik_controls = {k: v for k, v in ik_controls.items() if v is not None}
+            filtered_ik_controls = {
+                k: v for k, v in ik_controls.items() if v is not None
+            }
             ik_controls_complete_dict.update(filtered_ik_controls)
         init_val = None
         if ik_controls["ik_control"] and fk_controls:

@@ -933,17 +933,12 @@ def ikFkMatch_with_namespace2(
             tmp[-1] = "mth"
             return _get_node("_".join(tmp))
 
-
     # get elements to match
     fk_ctrls = [_get_node(x) for x in fk_controls]
     fk_targets = [_get_mth(x) for x in fk_controls]
 
-    ik_ctrl = {
-        key: _get_node(value) for key, value in ik_controls.items()
-    }
-    ik_targets = {
-        key: _get_mth(value) for key, value in ik_controls.items()
-    }
+    ik_ctrl = {key: _get_node(value) for key, value in ik_controls.items()}
+    ik_targets = {key: _get_mth(value) for key, value in ik_controls.items()}
 
     # get inital value
     ui_node = _get_node(ui_host)
@@ -953,13 +948,12 @@ def ikFkMatch_with_namespace2(
     ik_controls_list = list(ik_controls.values())
 
     # if already keyframe we always set keyframes
-    for c in [o_attr]+ fk_ctrls + ik_controls_list:
+    for c in [o_attr] + fk_ctrls + ik_controls_list:
         if pm.keyframe(c, query=True, keyframeCount=True):
             keyframe = True
             break
 
     val = o_attr.get()
-
 
     # sets keyframes before snapping
     if keyframe:
@@ -969,7 +963,8 @@ def ikFkMatch_with_namespace2(
         _all_controls.extend([o_attr])
         [
             cmds.setKeyframe(
-                "{}".format(_get_node(elem)), time=(cmds.currentTime(query=True) - 1.0)
+                "{}".format(_get_node(elem)),
+                time=(cmds.currentTime(query=True) - 1.0),
             )
             for elem in _all_controls
         ]
@@ -983,12 +978,22 @@ def ikFkMatch_with_namespace2(
 
     # if is FK then snap IK
     elif val == fk_val:
-        transform.matchWorldTransform(ik_targets["ik_control"], ik_ctrl["ik_control"])
-        transform.matchWorldTransform(ik_targets["pole_vector"], ik_ctrl["pole_vector"])
+        transform.matchWorldTransform(
+            ik_targets["ik_control"], ik_ctrl["ik_control"]
+        )
+        transform.matchWorldTransform(
+            ik_targets["pole_vector"], ik_ctrl["pole_vector"]
+        )
         try:
-            transform.matchWorldTransform(ik_targets["toes_ik"], ik_ctrl["toes_ik"])
-            transform.matchWorldTransform(ik_targets["toeRollIk"], ik_ctrl["toeRollIk"])
-            transform.matchWorldTransform(ik_targets["heelIk"], ik_ctrl["heelIk"])
+            transform.matchWorldTransform(
+                ik_targets["toes_ik"], ik_ctrl["toes_ik"]
+            )
+            transform.matchWorldTransform(
+                ik_targets["toeRollIk"], ik_ctrl["toeRollIk"]
+            )
+            transform.matchWorldTransform(
+                ik_targets["heelIk"], ik_ctrl["heelIk"]
+            )
         except KeyError:
             pass
         pm.setAttr(o_attr, ik_val)
@@ -997,12 +1002,12 @@ def ikFkMatch_with_namespace2(
     if keyframe:
         [
             cmds.setKeyframe(
-                "{}".format(_get_node(elem)), time=(cmds.currentTime(query=True))
+                "{}".format(_get_node(elem)),
+                time=(cmds.currentTime(query=True)),
             )
             for elem in _all_controls
         ]
     cmds.dgdirty(a=True)
-
 
     return
 
@@ -1104,6 +1109,7 @@ def ikFkMatch_with_namespace(
             tmp = name.split("_")
             tmp[-1] = "mth"
             return _get_node("_".join(tmp))
+
     # get things ready
     fk_ctrls = [_get_node(x) for x in fks]
     fk_targets = [_get_mth(x) for x in fks]
@@ -1936,9 +1942,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         src_keys = pm.keyframe(key_src_nodes, at=["t", "r", "s"], q=True)
         if src_keys:
 
-            keyframeList = sorted(
-                set(src_keys)
-            )
+            keyframeList = sorted(set(src_keys))
         else:
             pm.displayWarning("No keys to transfer.")
             return
