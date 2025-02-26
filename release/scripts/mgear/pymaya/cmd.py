@@ -173,7 +173,6 @@ def _obj_to_name(arg):
     return arg
 
 
-
 def _dt_to_value(arg):
     if isinstance(arg, (list, set, tuple)):
         return arg.__class__([_dt_to_value(x) for x in arg])
@@ -232,7 +231,8 @@ def _name_to_obj(arg, scope=SCOPE_NODE, known_node=None):
     if isinstance(arg, str):
         node_name = (
             "{}.{}".format(known_node, arg)
-            if scope == SCOPE_ATTR and known_node else arg
+            if scope == SCOPE_ATTR and known_node
+            else arg
         )
         try:
             return bind.PyNode(node_name)
@@ -240,7 +240,6 @@ def _name_to_obj(arg, scope=SCOPE_NODE, known_node=None):
             return arg
 
     return arg
-
 
 
 def _pymaya_cmd_wrap(func, wrap_object=True, scope=SCOPE_NODE):
@@ -755,6 +754,23 @@ def curve(*args, **kwargs):
             cmds.rename(shape, shape_name.replace("|", ""))
     the_return = _name_to_obj(transform_name)
     return the_return
+
+
+def _flatten_list(nested_list):
+    """Recursively flattens a nested list structure into a single list."""
+    flat_list = []
+    for item in nested_list:
+        if isinstance(item, (list, tuple)):
+            flat_list.extend(_flatten_list(item))
+        else:
+            flat_list.append(item)
+    return flat_list
+
+
+def select(*args, **kwargs):
+    """Wrapper for cmds.select() that supports nested lists."""
+    args = _flatten_list(args)
+    return _name_to_obj(cmds.select(*args, **kwargs))
 
 
 # set Locals dict
