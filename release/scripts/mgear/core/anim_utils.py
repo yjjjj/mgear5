@@ -350,6 +350,8 @@ def get_ik_fk_controls_by_role(uiHost, attr_ctl_cnx):
                     ik_controls["heelIk"] = c.stripNamespace()
                 elif role == "toeRollIk":
                     ik_controls["toeRollIk"] = c.stripNamespace()
+                elif role == "reverse_ankle_ik":
+                    ik_controls["reverse_ankle_ik"] = c.stripNamespace()
 
     # fk_controls = sorted(fk_controls)
     return ik_controls, fk_controls
@@ -993,6 +995,9 @@ def ikFkMatch_with_namespace2(
             )
             transform.matchWorldTransform(
                 ik_targets["heelIk"], ik_ctrl["heelIk"]
+            )
+            transform.matchWorldTransform(
+                ik_targets["reverse_ankle_ik"], ik_ctrl["reverse_ankle_ik"]
             )
         except KeyError:
             pass
