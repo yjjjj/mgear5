@@ -149,6 +149,12 @@ def getTransformLookingAt(pos, lookat, normal, axis="xy", negate=False):
         X = -a
         Y = b
         Z = -c
+    elif axis == "-x-y":
+        X = -a
+        Y = -b
+        Z = c
+    else:
+        raise ValueError("Invalid axis argument: {}".format(axis))
 
     m = datatypes.Matrix()
     m[0] = [X[0], X[1], X[2], 0.0]
