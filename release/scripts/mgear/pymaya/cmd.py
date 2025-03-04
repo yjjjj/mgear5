@@ -494,7 +494,8 @@ def _listRelatives(
                 node_name = (
                     parent_fn.fullPathName() if fullPath else parent_fn.name()
                 )
-                result_nodes.append(node_name)
+                if node_name:
+                    result_nodes.append(node_name)
         return _name_to_obj(result_nodes)
 
     def process_node(node_obj):
