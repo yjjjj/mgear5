@@ -1,6 +1,17 @@
 Release Log
 ===========
 
+5.0.5
+------
+**Bug Fix**
+	* PyMaya: attr add index method #263
+	* Anim_utils: IK/FK fix error when not keyframes #445
+	* PyMaya: implementing pm.select() to support nested lists > This mimics pymel select() and fixed issue with custom pickwalk #263
+	* Anim_utils: update get_ik_conntorls_by_role #445
+	* Core: Transform: getTransformLookingAt add support for -x-y axis config
+	* PyMaya: cmd listrelatives parent return empty list if none. Before was returning a list with an empty string like [""] now returns [] #263
+
+
 5.0.4
 ------
 **Bug Fix**
