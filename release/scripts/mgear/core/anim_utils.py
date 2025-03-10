@@ -1162,15 +1162,23 @@ def ikFkMatch_with_namespace(
                 bank_attr = None
 
     # sets keyframes before snapping
+    _all_controls = []
+    _all_controls.extend(fk_ctrls)
+    _all_controls.extend([ik_ctrl, upv_ctrl, o_attr])
+    if ik_rot:
+        _all_controls.extend([ik_rot_node])
+    if foot_cnx:
+        _all_controls.extend(foot_IK_ctls)
+        _all_controls.extend(foot_fk)
+
+    # if already keyframe we always set keyframes
+    if not key:
+        for c in _all_controls:
+            if pm.keyframe(c, query=True, keyframeCount=True):
+                key = True
+                break
+
     if key:
-        _all_controls = []
-        _all_controls.extend(fk_ctrls)
-        _all_controls.extend([ik_ctrl, upv_ctrl, o_attr])
-        if ik_rot:
-            _all_controls.extend([ik_rot_node])
-        if foot_cnx:
-            _all_controls.extend(foot_IK_ctls)
-            _all_controls.extend(foot_fk)
         [
             cmds.setKeyframe(
                 "{}".format(elem), time=(cmds.currentTime(query=True) - 1.0)
