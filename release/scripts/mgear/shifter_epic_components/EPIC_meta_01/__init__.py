@@ -132,8 +132,8 @@ class Component(component.Main):
 
         self.relatives["root"] = self.locList[0]
         self.jointRelatives["root"] = 0
-        self.controlRelatives["root"] = self.meta_ctl
+        self.controlRelatives["root"] = self.ctlList[0]
         for i in range(len(self.locList) - 1):
             self.relatives["%s_loc" % i] = self.locList[i + 1]
-            self.controlRelatives["%s_loc" % i] = self.meta_ctl
+            self.controlRelatives["%s_loc" % i] = self.ctlList[i + 1]
             self.jointRelatives["%s_loc" % i] = i + 1
