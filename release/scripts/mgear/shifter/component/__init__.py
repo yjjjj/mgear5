@@ -2335,6 +2335,14 @@ class Main(object):
         self.build_data["Twist"] = []
         self.build_data["Squash"] = []
         self.build_data["Settings"] = self.settings
+        settings_dict = self.guide.get_guide_template_dict()
+        # print("settings_dict>>>>")
+        # print(settings_dict)
+        self.build_data["Settings"]["RGB_fk"] = settings_dict["param_values"]["RGB_fk"]
+        self.build_data["Settings"]["RGB_ik"] = settings_dict["param_values"]["RGB_ik"]
+        # print('self.build_data["Settings"]')
+        # print(self.build_data["Settings"])
+        # print(self.settings)
         self.build_data["relatives"] = store_relative_names(self.relatives)
         self.build_data["jointRelatives"] = self.jointRelatives
         self.build_data["controlRelatives"] = store_relative_names(

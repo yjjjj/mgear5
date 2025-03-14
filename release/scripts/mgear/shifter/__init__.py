@@ -651,7 +651,27 @@ class Rig(object):
         Returns:
             dict: The collected data
         """
-        self.build_data["MainSettings"] = self.options
+        # print("self.guide.guide_template_dict>>>>>>>>>>>>>>>>>")
+        # print(self.guide.guide_template_dict["guide_root"]["param_values"])
+        # options in dictionary form
+        # self.options_dict = self.guide.guide_template_dict["guide_root"]["param_values"]
+        # print(self.options)
+        # print(self.guide.guide_template_dict["guide_root"]["param_values"])
+        # print(self.options)
+        self.build_data["MainSettings"] = self.guide.guide_template_dict["guide_root"]["param_values"]
+        self.build_data["MainSettings"]["size"] = self.options["size"]
+        # print(self.build_data["MainSettings"])
+
+        # replace the MVector with his value in a list
+        # keys_to_update = [
+        #     'L_RGB_fk', 'L_RGB_ik',
+        #     'R_RGB_fk', 'R_RGB_ik',
+        #     'C_RGB_fk', 'C_RGB_ik'
+        #     ]
+        # for key in keys_to_update:
+        #     self.build_data["MainSettings"][key] == self.guide.guide_template_dict["guide_root"]["param_values"][key]
+        # print(self.build_data["MainSettings"])
+        # self.build_data["MainSettings"] = self.guide.guide_template_dict["guide_root"]["param_values"]
         self.build_data["Components"] = []
         for c, comp in self.customStepDic["mgearRun"].components.items():
             self.build_data["Components"].append(comp.build_data)
@@ -661,7 +681,6 @@ class Rig(object):
             self.add_collected_data_to_root_jnt(root_jnt=root_jnt)
         if self.options["data_collector"]:
             self.data_collector_output(self.options["data_collector_path"])
-
         return self.build_data
 
     def data_collector_output(self, file_path=None):
@@ -675,7 +694,6 @@ class Rig(object):
                 guide.DATA_COLLECTOR_EXT
             )
             file_path = pm.fileDialog2(fileMode=0, fileFilter=ext_filter)[0]
-
         with open(file_path, "w") as f:
             f.write(json.dumps(self.build_data, indent=4))
             file_path = None
