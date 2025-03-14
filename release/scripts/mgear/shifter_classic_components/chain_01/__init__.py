@@ -262,8 +262,8 @@ class Component(component.Main):
                 cns.interpType.set(0)
                 weight_att = pm.parentConstraint(
                     cns, query=True, weightAliasList=True)
-                pm.connectAttr(rev_node + ".outputX", weight_att[0])
-                pm.connectAttr(self.blend_att, weight_att[1])
+                pm.connectAttr(rev_node + ".outputX", cns + "." + weight_att[0])
+                pm.connectAttr(self.blend_att, cns + "." + weight_att[1])
 
                 # scaling
                 blend_node = pm.createNode("blendColors")

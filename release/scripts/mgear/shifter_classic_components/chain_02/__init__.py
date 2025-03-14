@@ -258,8 +258,8 @@ class Component(component.Main):
                 if self.settings["chainAiming"] == 1:
                     # Loop until the last one and connect aim constraints from index+1
                     if i < len(self.loc) - 1:
-                        node = applyop.gear_matrix_cns(self.fk_ctl[i], loc, connect_srt="st")
-                        node.rename("{}_matrixConst".format(loc))
+                        node_mtx_cns = applyop.gear_matrix_cns(self.fk_ctl[i], loc, connect_srt="st")
+                        node_mtx_cns.rename("{}_matrixConst".format(loc))
 
                         # create an aimMatrix node
                         aim_matrix_node = pm.createNode("aimMatrix")
@@ -294,8 +294,8 @@ class Component(component.Main):
                 cns.interpType.set(0)
                 weight_att = pm.parentConstraint(
                     cns, query=True, weightAliasList=True)
-                pm.connectAttr(rev_node + ".outputX", weight_att[0])
-                pm.connectAttr(self.blend_att, weight_att[1])
+                pm.connectAttr(rev_node + ".outputX", cns + "." + weight_att[0])
+                pm.connectAttr(self.blend_att, cns + "." + weight_att[1])
 
                 # scaling
                 blend_node = pm.createNode("blendColors")
