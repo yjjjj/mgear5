@@ -626,10 +626,11 @@ class Component(component.Main):
         )
 
         self.match_fk3 = self.add_match_ref(
-            self.fk_ctl[3], self.ik_ctl, "fk3_mth"
+            self.fk_ctl[3], self.legBonesIK[-1], "fk3_mth"
         )
 
         self.match_ik = self.add_match_ref(self.ik_ctl, self.fk3_ctl, "ik_mth")
+        self.match_roll = self.add_match_ref(self.roll_ctl, self.fk2_ctl, "roll_mth")
 
         self.match_ikUpv = self.add_match_ref(
             self.upv_ctl, self.fk0_ctl, "upv_mth"
