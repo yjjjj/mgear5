@@ -1,131 +1,154 @@
-"""Rigbits proxy mesh slicer"""
+"""
+Rigbits proxy mesh slicer using maya.cmds.
+
+This script creates proxy geometry for a skinned object by splitting its faces
+into groups based on skinCluster influence weights.
+"""
 
 import datetime
-
-import mgear.pymaya as pm
-
+import maya.cmds as cmds
 import mgear
 
-from mgear.core import applyop, node, transform
+from mgear.core import applyop, node
 
 
-def slice(parent=False, oSel=False, *args):
-    """Create a proxy geometry from a skinned object"""
+def matchWorldTransform_cmds(source, target):
+    """Match target's world transform to source using cmds.xform.
 
-    startTime = datetime.datetime.now()
+    Args:
+        source (str): Source transform name.
+        target (str): Target transform name.
+    """
+    m = cmds.xform(source, q=True, ws=True, m=True)
+    cmds.xform(target, ws=True, m=m)
+
+
+def slice(parent=False, oSel=None, *args):
+    """Create a proxy geometry from a skinned object using maya.cmds.
+
+    Args:
+        parent (bool): If True, parent the proxy under the skin influence.
+        oSel (str): Name of the object to process. If not provided, the first
+            selected object is used.
+        *args: Additional arguments (ignored).
+
+    Raises:
+        RuntimeError: If no object is selected or if necessary nodes are missing.
+    """
+    start_time = datetime.datetime.now()
     print(oSel)
     if not oSel:
-        oSel = pm.selected()[0]
-        print("----")
-        print(oSel)
+        sels = cmds.ls(sl=True, long=True)
+        if not sels:
+            cmds.error("No object selected.")
+        oSel = sels[0]
+        print("----\n{}".format(oSel))
 
-    oColl = pm.skinCluster(oSel, query=True, influence=True)
-    oFaces = oSel.faces
-    nFaces = oSel.numFaces()
+    # Get skinCluster influences.
+    infs = cmds.skinCluster(oSel, q=True, inf=True)
+    n_faces = cmds.polyEvaluate(oSel, face=True)
+    # Get face components as strings.
+    o_faces = cmds.ls(oSel + ".f[*]", flatten=True)
+    face_groups = [[] for _ in infs]
 
-    faceGroups = []
-    for x in oColl:
-        faceGroups.append([])
-    sCluster = pm.listConnections(oSel.getShape(), type="skinCluster")
-    print(sCluster)
-    sCName = sCluster[0].name()
-    for iFace in range(nFaces):
-        faceVtx = oFaces[iFace].getVertices()
-        oSum = False
-        for iVtx in faceVtx:
-            values = pm.skinPercent(sCName, oSel.vtx[iVtx], q=True, v=True)
-            if oSum:
-                oSum = [L + l for L, l in zip(oSum, values)]
+    # Get the shape node and skinCluster.
+    shapes = cmds.listRelatives(oSel, s=True, fullPath=True)
+    if not shapes:
+        cmds.error("No shape node found for '{}'.".format(oSel))
+    s_cluster = cmds.listConnections(shapes[0], type="skinCluster")
+    if not s_cluster:
+        cmds.error("No skinCluster found on '{}'.".format(shapes[0]))
+    sC_name = s_cluster[0]
+
+    # Process each face.
+    for i_face in range(n_faces):
+        face = o_faces[i_face]
+        info = cmds.polyInfo(face, faceToVertex=True)
+        if info:
+            # polyInfo returns a string like: "Face 0: 0 1 2 3"
+            vtxs = list(map(int, info[0].split()[2:]))
+        else:
+            vtxs = []
+        o_sum = None
+        for i_vtx in vtxs:
+            vtx = "{}.vtx[{}]".format(oSel, i_vtx)
+            vals = cmds.skinPercent(sC_name, vtx, q=True, v=True)
+            if o_sum is None:
+                o_sum = vals
             else:
-                oSum = values
-
-        print("adding face: " \
-              + str(iFace) \
-              + " to group in: " \
-              + str(oColl[oSum.index(max(oSum))]))
-
-        faceGroups[oSum.index(max(oSum))].append(iFace)
+                o_sum = [a + b for a, b in zip(o_sum, vals)]
+        if o_sum:
+            max_idx = o_sum.index(max(o_sum))
+            print("adding face: {} to group in: {}"
+                  .format(i_face, infs[max_idx]))
+            face_groups[max_idx].append(i_face)
 
     original = oSel
+
+    # Create a parent group if needed.
     if not parent:
-        try:
-            parentGroup = pm.PyNode("ProxyGeo")
-        except TypeError:
-            parentGroup = pm.createNode("transform", n="ProxyGeo")
-    try:
-        proxySet = pm.PyNode("rig_proxyGeo_grp")
-    except TypeError:
-        proxySet = pm.sets(name="rig_proxyGeo_grp", em=True)
+        if cmds.objExists("ProxyGeo"):
+            parent_grp = "ProxyGeo"
+        else:
+            parent_grp = cmds.createNode("transform", name="ProxyGeo")
+    if cmds.objExists("rig_proxyGeo_grp"):
+        proxy_set = "rig_proxyGeo_grp"
+    else:
+        proxy_set = cmds.sets(empty=True, name="rig_proxyGeo_grp")
 
-    for boneList in faceGroups:
-
-        if len(boneList):
-            newObj = pm.duplicate(
-                original,
-                rr=True,
-                name=oColl[faceGroups.index(boneList)] + "_Proxy")
-
-            for trans in ["tx",
-                          "ty",
-                          "tz",
-                          "rx",
-                          "ry",
-                          "rz",
-                          "sx",
-                          "sy",
-                          "sz"]:
-
-                pm.setAttr(newObj[0].name() + "." + trans, lock=0)
-
-            c = list(newObj[0].faces)
-
-            for index in reversed(boneList):
-
-                c.pop(index)
-
-            pm.delete(c)
+    # Process each face group.
+    for idx, bone_list in enumerate(face_groups):
+        if bone_list:
+            proxy_name = infs[idx] + "_Proxy"
+            dup = cmds.duplicate(original, rr=True, name=proxy_name)
+            new_obj = dup[0]
+            # Unlock transform attributes.
+            for attr in ("translateX", "translateY", "translateZ",
+                         "rotateX", "rotateY", "rotateZ",
+                         "scaleX", "scaleY", "scaleZ"):
+                cmds.setAttr(new_obj + "." + attr, lock=False)
+            new_faces = cmds.ls(new_obj + ".f[*]", flatten=True)
+            faces_to_del = list(new_faces)
+            for face_idx in sorted(bone_list, reverse=True):
+                if face_idx < len(faces_to_del):
+                    faces_to_del.pop(face_idx)
+            cmds.delete(faces_to_del)
             if parent:
-                pm.parent(newObj,
-                          pm.PyNode(oColl[faceGroups.index(boneList)]),
-                          a=True)
+                cmds.parent(new_obj, infs[idx])
             else:
-                pm.parent(newObj, parentGroup, a=True)
-                dummyCopy = pm.duplicate(newObj[0])[0]
-                pm.delete(newObj[0].listRelatives(c=True))
-
-                transform.matchWorldTransform(
-                    pm.PyNode(oColl[faceGroups.index(boneList)]), newObj[0])
-
-                pm.parent(dummyCopy.listRelatives(c=True)[0],
-                          newObj[0],
-                          shape=True)
-
-                pm.delete(dummyCopy)
-
-                pm.rename(newObj[0].listRelatives(c=True)[0],
-                          newObj[0].name() + "_offset")
-
-                o_multiplayer = pm.PyNode(oColl[faceGroups.index(boneList)])
+                # Reparent proxy under the designated group (removes it from the
+                # scene root if necessary)
+                cmds.parent(new_obj, parent_grp)
+                # Duplicate new_obj to transfer its shape cleanly.
+                dummy = cmds.duplicate(new_obj, rr=True)[0]
+                # Remove existing shapes from new_obj.
+                children = cmds.listRelatives(new_obj, s=True, fullPath=True)
+                if children:
+                    cmds.delete(children)
+                # Match world transform.
+                matchWorldTransform_cmds(infs[idx], new_obj)
+                dummy_shapes = cmds.listRelatives(dummy, s=True, fullPath=True)
+                if dummy_shapes:
+                    cmds.parent(dummy_shapes[0], new_obj, shape=True)
+                cmds.delete(dummy)
+                new_shape = cmds.listRelatives(new_obj, s=True, fullPath=True)
+                if new_shape:
+                    cmds.rename(new_shape[0], new_obj + "_offset")
                 mulmat_node = applyop.gear_mulmatrix_op(
-                    o_multiplayer.name() + ".worldMatrix",
-                    newObj[0].name() + ".parentInverseMatrix")
+                    infs[idx] + ".worldMatrix",
+                    new_obj + ".parentInverseMatrix")
+                out_plug = mulmat_node + ".output"
+                dm_node = node.createDecomposeMatrixNode(out_plug)
+                cmds.connectAttr(dm_node + ".outputTranslate",
+                                 new_obj + ".translate")
+                cmds.connectAttr(dm_node + ".outputRotate",
+                                 new_obj + ".rotate")
+                cmds.connectAttr(dm_node + ".outputScale",
+                                 new_obj + ".scale")
+            print("Creating proxy for: {}".format(infs[idx]))
+            cmds.sets(new_obj, addElement=proxy_set)
 
-                outPlug = mulmat_node + ".output"
-                dm_node = node.createDecomposeMatrixNode(outPlug)
-
-                pm.connectAttr(dm_node + ".outputTranslate",
-                               newObj[0].name() + ".t")
-                pm.connectAttr(dm_node + ".outputRotate",
-                               newObj[0].name() + ".r")
-                pm.connectAttr(dm_node + ".outputScale",
-                               newObj[0].name() + ".s")
-
-            print("Creating proxy for: {}".format(
-                str(oColl[faceGroups.index(boneList)])))
-
-            pm.sets(proxySet, add=newObj)
-
-    endTime = datetime.datetime.now()
-    finalTime = endTime - startTime
-    mgear.log("=============== Slicing for: %s finish ======= [ %s  ] ==="
-              "===" % (oSel.name(), str(finalTime)))
+    end_time = datetime.datetime.now()
+    final_time = end_time - start_time
+    mgear.log("=============== Slicing for: {} finish ======= [ {} ] ==="
+              .format(oSel, str(final_time)))
