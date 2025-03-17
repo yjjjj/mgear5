@@ -7,14 +7,12 @@ Module that contains all commands available for ueGear
 
 from __future__ import print_function, division, absolute_import
 
-import cmd
 import os
 import tempfile
 import traceback
 
 import maya.cmds as cmds
 import maya.api.OpenMaya as OpenMaya
-import mgear.pymaya as pm
 
 from mgear.vendor.Qt import QtWidgets
 
