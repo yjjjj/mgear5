@@ -7,6 +7,7 @@ Module that contains all commands available for ueGear
 
 from __future__ import print_function, division, absolute_import
 
+import cmd
 import os
 import tempfile
 import traceback
@@ -576,15 +577,15 @@ def update_selected_transforms():
 
     uegear_bridge = bridge.UeGearBridge()
 
-    selected_nodes = pm.selected()
+    selected_nodes = cmds.ls( selection=True )
     world_up = cmds.optionVar(query="upAxisDirection")
 
     old_rotation_orders = list()
-    for selected_node in selected_nodes:
-        old_rotation_orders.append(selected_node.rotateOrder.getEnums()[selected_node.rotateOrder.get()].upper())
-        attribute.setRotOrder(selected_node, s="XYZ")
-        # old_rotation_orders.append(selected_node.getRotationOrder())
-        # selected_node.setRotationOrder("XZY", True)
+    for node_name in selected_nodes:
+        rot_order_index = cmds.getAttr(f"{node_name}.rotateOrder")
+        old_rotation_orders.append(rot_order_index)
+        cmds.setAttr(f"{node_name}.rotateOrder", 0) # XYZ
+
     try:
         objects = cmds.ls(sl=True, sn=True)
         for obj in objects:
@@ -610,8 +611,7 @@ def update_selected_transforms():
             )
     finally:
         for i, selected_node in enumerate(selected_nodes):
-            attribute.setRotOrder(selected_node, s=old_rotation_orders[i])
-            # selected_node.setRotationOrder(old_rotation_orders[i], True)
+            cmds.setAttr(f"{node_name}.rotateOrder", old_rotation_orders[i])
 
 
 # NOT IMPLEMENTED
