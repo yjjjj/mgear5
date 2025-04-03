@@ -18,8 +18,8 @@ To generate the build solution for Visual Studio, run the following commands:
 
 ```sh
 cmake -G "Visual Studio 16 2019" -A x64 -DMAYA_VERSION=2024 ../
-cmake -G "Visual Studio 16 2019" -A x64 -DMAYA_VERSION=2025 ../
 cmake -G "Visual Studio 17 2022" -A x64 -DMAYA_VERSION=2025 ../
+cmake -G "Visual Studio 17 2022" -A x64 -DMAYA_VERSION=2026 ../
 ```
 
 To compile the solution:

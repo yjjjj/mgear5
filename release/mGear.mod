@@ -82,3 +82,15 @@ icons: ../../../../icons
 scripts: ../../../../scripts
 icons: ../../../../icons
 
++ MAYAVERSION:2026 PLATFORM:win64 mGear 5.0 ./platforms/2026/windows/x64
+scripts: ../../../../scripts
+icons: ../../../../icons
+
++ MAYAVERSION:2026 PLATFORM:linux mGear 5.0 ./platforms/2026/linux/x64
+scripts: ../../../../scripts
+icons: ../../../../icons
+
++ MAYAVERSION:2026 PLATFORM:mac   mGear 5.0 ./platforms/2026/osx/x64
+scripts: ../../../../scripts
+icons: ../../../../icons
+
