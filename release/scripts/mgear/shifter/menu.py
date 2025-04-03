@@ -191,6 +191,11 @@ def guide_template_samples_submenu(parent_menu_id):
         ("EPIC Mannequin Template, Y-up", str_epic_mannequin_y_template),
         ("-----", None),
         ("EPIC MetaHuman Snap", str_epic_metahuman_snap),
+        ("-----", None),
+        ("Spider", str_spider_template),
+        ("Giraffe", str_giraffe_template),
+        ("Mantis", str_mantis_template),
+        ("T-Rex", str_trex_template),
     )
 
     mgear.menu.install(
@@ -325,6 +330,23 @@ io.metahuman_snap()
 str_game_biped_template = """
 from mgear.shifter import io
 io.import_sample_template("game_biped.sgt")
+"""
+
+str_spider_template = """
+from mgear.shifter import io
+io.import_sample_template("spider.sgt")
+"""
+str_mantis_template = """
+from mgear.shifter import io
+io.import_sample_template("mantis.sgt")
+"""
+str_trex_template = """
+from mgear.shifter import io
+io.import_sample_template("trex.sgt")
+"""
+str_giraffe_template = """
+from mgear.shifter import io
+io.import_sample_template("giraffe.sgt")
 """
 
 str_mocap_importSkeletonBiped = """
