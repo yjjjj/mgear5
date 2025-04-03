@@ -941,7 +941,7 @@ class Rig(Main):
                             comp_guide.parentLocalName
                         )
                     )
-                except pm.MayaNodeError:
+                except RuntimeError:
                     # if we have a name clashing in the scene, it will try for
                     # find the parent by crawling the hierarchy. This will take
                     # longer time.
