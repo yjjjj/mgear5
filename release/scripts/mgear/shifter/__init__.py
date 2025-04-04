@@ -145,8 +145,8 @@ def reloadComponents(*args):
         for com in compDir[x]:
             try:
                 if PY2:
-                    reload(importComponent(com))
-                    reload(importComponentGuide(com))
+                    reload(importComponent(com)) # type: ignore
+                    reload(importComponentGuide(com)) # type: ignore
                 else:
                     importlib.reload(importComponent(com))
                     importlib.reload(importComponentGuide(com))

@@ -474,6 +474,12 @@ class Main(object):
                 self.active_jnt = jnt
 
                 if keep_off:
+                    # if jnt.rotate.get() != (0, 0, 0):
+                    if not all(component == 0 for component in jnt.rotate.get()):
+                        pm.displayInfo(f"Joint {jnt.name()} has non-zero rotations, We will use Constraints to connect: {jnt.rotate.get()}")
+                        use_cns_connection = True
+                    else:
+                        use_cns_connection = False
                     driver = primitive.addTransform(
                         obj, name=obj.name() + "_cnx_off"
                     )
@@ -489,7 +495,18 @@ class Main(object):
                         driver = obj
                         rot_off = rot_off
 
-                if driver:
+                if use_cns_connection and self.options["connect_joints"]:
+                    # coonnect jnt to driver using parent contraint and scale
+                    # and mantain offset
+                    pm.parentConstraint(
+                        driver, jnt, maintainOffset=True, weight=1
+                    )
+                    pm.scaleConstraint(
+                        driver, jnt, maintainOffset=True, weight=1
+                    )
+                    cns_m = None
+
+                elif driver:
                     # if segComp:
                     #     # if segment compensation is active we handle the scale
                     #     # outside of the gear matrix contraint
