@@ -810,6 +810,18 @@ class NurbsCurve(_Node):
     def degree(self):
         return self.__fn_curve.degree
 
+    def numSpans(self):
+        """Calculate and return the number of spans in the NURBS curve."""
+        num_knots = self.__fn_curve.numKnots
+        degree = self.__fn_curve.degree
+        num_spans = num_knots - degree - 1
+
+        # Adjust for periodic curves
+        if self.__fn_curve.form == OpenMaya.MFnNurbsCurve.kPeriodic:
+            num_spans -= 1
+
+        return num_spans
+
     def getKnots(self):
         return [x for x in self.__fn_curve.knots()]
 

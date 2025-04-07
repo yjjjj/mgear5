@@ -20,6 +20,14 @@ class EnumValue(object):
     def index(self):
         return self.__index
 
+    def __str__(self):
+        """Fallback string representation."""
+        return self.key if self.key else str(self.index)
+
+    def __repr__(self):
+        """Developer-friendly representation."""
+        return f"EnumValue(index={self.index}, key='{self.key}')"
+
 
 class Attribute(base.Attr):
     __selectionlist = OpenMaya.MSelectionList()

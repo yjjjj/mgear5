@@ -565,7 +565,8 @@ def importSkin(filePath=None, *args):
                     # if nurbs, count the cvs instead of the vertices.
                     meshVertices = sum([len(shape.cv) for shape in objShapes])
                 elif isinstance(objNode.getShape(), pm.nodetypes.NurbsCurve):
-                    meshVertices = sum([len(shape.cv) for shape in objShapes])
+                    # meshVertices = sum([len(shape.cv) for shape in objShapes])
+                    meshVertices = sum(1 for _ in objShapes[0].cv)
                 else:
                     # TODO: Implement other skinnable objs like lattices.
                     meshVertices = 0
