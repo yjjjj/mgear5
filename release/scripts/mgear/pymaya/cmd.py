@@ -457,6 +457,8 @@ def _listRelatives(
     sel_list = OpenMaya.MSelectionList()
 
     if not isinstance(dag_path, str):
+        # dag_path_type = __builtins__["type"](dag_path)
+        # print("dag_path_type: {}".format(dag_path_type))
         dag_path = dag_path.longName()
     try:
         sel_list.add(dag_path)

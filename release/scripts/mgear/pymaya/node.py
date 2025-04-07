@@ -10,6 +10,7 @@ from . import exception
 from . import geometry
 from . import util
 from functools import partial
+import math
 
 
 RE_ATTR_INDEX = re.compile("\[([0-9]+)\]")

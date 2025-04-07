@@ -892,6 +892,10 @@ class RBFNode(rbf_node.RBFNode):
         self.rbfType = RBF_TYPE
         super(RBFNode, self).__init__(name)
 
+    def longName(self):
+        """Returns the full path name of the RBF node."""
+        return pm.PyNode(self.name).longName()
+
     def nodeType_suffix(self):
         return WD_SUFFIX
 
