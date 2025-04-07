@@ -38,7 +38,7 @@ class Component(component.Main):
 
         margin = 0.1 * self.size
 
-        border_offset = dt.Point(minX + maxX, minY + maxY) * 0.5
+        border_offset = dt.Vector(minX + maxX, minY + maxY) * 0.5
 
         self.border = self.addCtl(self.root,
                                   "border", t,
