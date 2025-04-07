@@ -473,13 +473,12 @@ class Main(object):
                 # All new jnts are the active by default
                 self.active_jnt = jnt
 
+                use_cns_connection = False
                 if keep_off:
                     # if jnt.rotate.get() != (0, 0, 0):
                     if not all(component == 0 for component in jnt.rotate.get()):
                         pm.displayInfo(f"Joint {jnt.name()} has non-zero rotations, We will use Constraints to connect: {jnt.rotate.get()}")
                         use_cns_connection = True
-                    else:
-                        use_cns_connection = False
                     driver = primitive.addTransform(
                         obj, name=obj.name() + "_cnx_off"
                     )
