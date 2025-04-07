@@ -10,7 +10,7 @@ assignees: miquelcampos
 ## 🐞 Bug Report
 
 ### Description
-
+_IMPORTANT NOTE: Before creating a bug, please check if is already logged and still exist in the latest beta_
 _A clear and concise description of the issue._
 
 ### Steps to Reproduce
