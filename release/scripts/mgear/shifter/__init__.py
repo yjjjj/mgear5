@@ -184,8 +184,6 @@ class Rig(object):
 
         self.build_data = {}
 
-        self.component_finalize = False
-
     def buildFromDict(self, conf_dict):
         log_window()
         startTime = datetime.datetime.now()
@@ -545,8 +543,6 @@ class Rig(object):
                     name + " : " + comp.fullName + " (" + comp.type + ")"
                 )
                 comp.stepMethods[i]()
-                if name == "Finalize":
-                    self.component_finalize = True
 
             if self.options["step"] >= 1 and i >= self.options["step"] - 1:
                 break
@@ -616,8 +612,8 @@ class Rig(object):
 
         # hide all DG nodes inputs in channel box -----------------------
         # only hides if components_finalize or All steps are done
-
-        if self.component_finalize:
+        # if not WIP mode we will hide all the inputs
+        if not self.options["mode"]:
             for c in self.model.listHistory(ac=True, f=True):
                 if c.type() != "transform":
                     c.isHistoricallyInteresting.set(False)
