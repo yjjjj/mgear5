@@ -71,8 +71,11 @@ class Component(component.Main):
             self.guide.apos[0:4],
             self.normal,
             False,
-            self.WIP,
+            True,
         )
+        if not self.WIP:
+            for b in self.legBones:
+                b.attr("drawStyle").set(2)
 
         # Leg chain FK ref
         self.legBonesFK = primitive.add2DChain(
