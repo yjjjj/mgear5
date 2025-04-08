@@ -642,6 +642,9 @@ class Rig(Main):
                 p_local_name = c_dict["parent_localName"]
                 self.components[comp].parentLocalName = p_local_name
 
+        # More option values
+        self.addOptionsValues()
+
     def get_guide_template_dict(self, meta=None):
         """Get the guide temaplate configuration dictionary
 
