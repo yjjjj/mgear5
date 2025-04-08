@@ -184,6 +184,7 @@ class Rig(object):
 
         self.build_data = {}
 
+    @utils.one_undo
     def buildFromDict(self, conf_dict):
         log_window()
         startTime = datetime.datetime.now()
@@ -207,17 +208,20 @@ class Rig(object):
         self.build()
         self.from_dict_custom_step(conf_dict, pre=False)
         # Collect post-build data
-        build_data = self.collect_build_data()
+        if self.options["data_collector_embedded"] or self.options["data_collector"]:
+            build_data = self.collect_build_data()
+        else:
+            build_data = None
 
         endTime = datetime.datetime.now()
         finalTime = endTime - startTime
-        pm.flushUndo()
-        pm.displayInfo(
-            "Undo history have been flushed to avoid "
-            "possible crash after rig is build. \n"
-            "More info: "
-            "https://github.com/miquelcampos/mgear/issues/72"
-        )
+        # pm.flushUndo()
+        # pm.displayInfo(
+        #     "Undo history have been flushed to avoid "
+        #     "possible crash after rig is build. \n"
+        #     "More info: "
+        #     "https://github.com/miquelcampos/mgear/issues/72"
+        # )
         mgear.log(
             "\n"
             + "= SHIFTER BUILD RIG DONE {} [ {} ] {}".format(
@@ -227,6 +231,7 @@ class Rig(object):
 
         return build_data
 
+    @utils.one_undo
     def buildFromSelection(self):
         """Build the rig from selected guides."""
 
@@ -265,17 +270,20 @@ class Rig(object):
                 self.postCustomStep()
 
             # Collect post-build data
-            build_data = self.collect_build_data()
+            if self.options["data_collector_embedded"] or self.options["data_collector"]:
+                build_data = self.collect_build_data()
+            else:
+                build_data = None
 
             endTime = datetime.datetime.now()
             finalTime = endTime - startTime
-            pm.flushUndo()
-            pm.displayInfo(
-                "Undo history have been flushed to avoid "
-                "possible crash after rig is build. \n"
-                "More info: "
-                "https://github.com/miquelcampos/mgear/issues/72"
-            )
+            # pm.flushUndo()
+            # pm.displayInfo(
+            #     "Undo history have been flushed to avoid "
+            #     "possible crash after rig is build. \n"
+            #     "More info: "
+            #     "https://github.com/miquelcampos/mgear/issues/72"
+            # )
             mgear.log(
                 "\n"
                 + "= SHIFTER BUILD RIG DONE {} [ {} ] {}".format(
