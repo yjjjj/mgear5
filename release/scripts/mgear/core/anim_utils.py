@@ -450,7 +450,7 @@ def getInvertCheckButtonAttrName(str):
     Returns:
         str: The checked attribute name
     """
-    # type: (str) -> str
+    # type = (str) -> str
     return "inv{0}".format(str.lower().capitalize())
 
 
@@ -910,7 +910,7 @@ def ikFkMatch_with_namespace2(
 
     # returns a pymel node on the given name
     def _get_node(name):
-        # type: (str) -> pm.nodetypes.Transform
+        # type = (str) -> pm.nodetypes.Transform
         name = stripNamespace(name)
         if namespace:
             node = getNode(":".join([namespace, name]))
@@ -924,7 +924,7 @@ def ikFkMatch_with_namespace2(
 
     # returns matching node
     def _get_mth(name):
-        # type: (str) -> pm.nodetypes.Transform
+        # type = (str) -> pm.nodetypes.Transform
         node = _get_node(name)
         if node.hasAttr("match_ref"):
             match_node = node.match_ref.listConnections()
@@ -1090,7 +1090,7 @@ def ikFkMatch_with_namespace(
     # -----------------------------------------------
     # returns a pymel node on the given name
     def _get_node(name):
-        # type: (str) -> pm.nodetypes.Transform
+        # type = (str) -> pm.nodetypes.Transform
         name = stripNamespace(name)
         if namespace:
             node = getNode(":".join([namespace, name]))
@@ -1104,7 +1104,7 @@ def ikFkMatch_with_namespace(
 
     # returns matching node
     def _get_mth(name):
-        # type: (str) -> pm.nodetypes.Transform
+        # type = (str) -> pm.nodetypes.Transform
         node = _get_node(name)
         if node.hasAttr("match_ref"):
             match_node = node.match_ref.listConnections()
@@ -1690,16 +1690,16 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         valueChanged = pyqt.pyqtSignal()
 
     def __init__(self):
-        # type: () -> None
+        # type = () -> None
 
-        self.comboObj = None  # type: widgets.toggleCombo
-        self.comboItems = []  # type: list[str]
-        self.model = None  # type: pm.nodetypes.Transform
-        self.uihost = None  # type: str
-        self.switchedAttrShortName = None  # type: str
+        self.comboObj = None  # type = widgets.toggleCombo
+        self.comboItems = []  # type = list[str]
+        self.model = None  # type = pm.nodetypes.Transform
+        self.uihost = None  # type = str
+        self.switchedAttrShortName = None  # type = str
 
     def createUI(self, parent=None):
-        # type: (QtWidgets.QObject) -> None
+        # type = (QtWidgets.QObject) -> None
 
         super(AbstractAnimationTransfer, self).__init__(parent)
 
@@ -1712,7 +1712,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         self.create_connections()
 
     def create_controls(self):
-        # type: () -> None
+        # type = () -> None
 
         self.groupBox = QtWidgets.QGroupBox()
 
@@ -1749,7 +1749,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         self.spaceTransfer_button = QtWidgets.QPushButton("Space Transfer")
 
     def create_layout(self):
-        # type: () -> None
+        # type = () -> None
 
         frames_layout = QtWidgets.QHBoxLayout()
         frames_layout.setContentsMargins(1, 1, 1, 1)
@@ -1777,7 +1777,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         self.setLayout(spaceTransfer_layout)
 
     def create_connections(self):
-        # type: () -> None
+        # type = () -> None
 
         self.spaceTransfer_button.clicked.connect(self.doItByUI)
         self.allFrames_button.clicked.connect(
@@ -1790,7 +1790,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
     # SLOTS ##########################################################
 
     def populateRange(self, timeSlider=False):
-        # type: (bool) -> None
+        # type = (bool) -> None
         if timeSlider:
             start = pm.playbackOptions(q=True, min=True)
             end = pm.playbackOptions(q=True, max=True)
@@ -1801,7 +1801,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         self.endFrame_value.setValue(end)
 
     def setComboBoxItemsFormComboObj(self, combo):
-        # type: (widegts.toggleCombo or QtWidgets.QListWidget) -> None
+        # type = (widegts.toggleCombo or QtWidgets.QListWidget) -> None
 
         del self.comboItems[:]
         for i in range(combo.count() - 1):
@@ -1812,7 +1812,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
                 self.comboItems.append(combo.itemText(i))
 
     def setComboBoxItemsFormList(self, comboList):
-        # type: (list[str]) -> None
+        # type = (list[str]) -> None
 
         del self.comboItems[:]
         for i in range(len(comboList)):
@@ -1821,36 +1821,36 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
     # ----------------------------------------------------------------
 
     def setGroupBoxTitle(self):
-        # type: (str) -> None
+        # type = (str) -> None
         # raise NotImplementedError("must implement transfer
         # in each specialized class")
         pass
 
     def setComboObj(self, combo):
-        # type: (widgets.toggleCombo) -> None
+        # type = (widgets.toggleCombo) -> None
         self.comboObj = combo
 
     def setModel(self, model):
-        # type: (pm.nodetypes.Transform) -> None
+        # type = (pm.nodetypes.Transform) -> None
         self.model = model
         self.nameSpace = getNamespace(self.model)
 
     def setUiHost(self, uihost):
-        # type: (str) -> None
+        # type = (str) -> None
         self.uihost = uihost
 
     def setSwitchedAttrShortName(self, attr):
-        # type: (str) -> None
+        # type = (str) -> None
         self.switchedAttrShortName = attr
 
     def getHostName(self):
-        # type: () -> str
+        # type = () -> str
         return ":".join([self.nameSpace, self.uihost])
 
     def getWorldMatrices(
         self, start, end, val_src_nodes, pole_vector_matrices=None
     ):
-        # type: (int, int, List[pm.nodetypes.Transform]) ->
+        # type = (int, int, List[pm.nodetypes.Transform]) ->
         # List[List[pm.datatypes.Matrix]]
         """returns matrice List[frame][controller number]."""
         if pole_vector_matrices is None:
@@ -1868,7 +1868,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         return res
 
     def getIKPoleVectorMatrices(self, start, end, fkc):
-        # type: (int, int, List[pm.nodetypes.Transform]) ->
+        # type = (int, int, List[pm.nodetypes.Transform]) ->
         # List[List[pm.datatypes.Matrix]]
         """returns matrice List[frame][controller number]."""
         from . import vector, transform
@@ -1884,13 +1884,13 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         return res
 
     def transfer(self, startFrame, endFrame, onlyKeyframes, *args, **kwargs):
-        # type: (int, int, bool, *str, **str) -> None
+        # type = (int, int, bool, *str, **str) -> None
         raise NotImplementedError(
             "must be implemented in each " "specialized class"
         )
 
     def doItByUI(self):
-        # type: () -> None
+        # type = () -> None
 
         # gather settings from UI
         startFrame = self.startFrame_value.value()
@@ -1925,7 +1925,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         definition="",
     ):
 
-        # type: (str, List[pm.nodetypes.Transform],
+        # type = (str, List[pm.nodetypes.Transform],
         # List[pm.nodetypes.Transform],
         # List[pm.nodetypes.Transform], int, int, bool) -> None
 
@@ -1997,25 +1997,25 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
 
 class ParentSpaceTransfer(AbstractAnimationTransfer):
     def __init__(self):
-        # type: () -> None
+        # type = () -> None
         super(ParentSpaceTransfer, self).__init__()
 
     # ----------------------------------------------------------------
 
     def setCtrls(self, srcName):
-        # type: (str) -> None
+        # type = (str) -> None
         self.ctrlNode = getNode(":".join([self.nameSpace, srcName]))
 
     def getChangeAttrName(self):
-        # type: () -> str
+        # type = () -> str
         return "{}.{}".format(self.getHostName(), self.switchedAttrShortName)
 
     def changeAttrToBoundValue(self):
-        # type: () -> None
+        # type = () -> None
         pm.setAttr(self.getChangeAttrName(), self.getValue())
 
     def getValue(self):
-        # type: () -> int
+        # type = () -> int
         return self.comboBoxSpaces.currentIndex()
 
     def setGroupBoxTitle(self):
@@ -2027,7 +2027,7 @@ class ParentSpaceTransfer(AbstractAnimationTransfer):
             self.groupBox.setTitle(part)
 
     def transfer(self, startFrame, endFrame, onlyKeyframes, *args, **kwargs):
-        # type: (int, int, bool, *str, **str) -> None
+        # type = (int, int, bool, *str, **str) -> None
 
         val_src_nodes = [self.ctrlNode]
         key_src_nodes = val_src_nodes
@@ -2045,7 +2045,7 @@ class ParentSpaceTransfer(AbstractAnimationTransfer):
 
     @staticmethod
     def showUI(combo, model, uihost, switchedAttrShortName, ctrl_name, *args):
-        # type: (widgets.toggleCombo,
+        # type = (widgets.toggleCombo,
         # pm.nodetypes.Transform, str, str, str, *str) -> None
 
         try:
@@ -2079,18 +2079,18 @@ class ParentSpaceTransfer(AbstractAnimationTransfer):
 
 class IkFkTransfer(AbstractAnimationTransfer):
     def __init__(self):
-        # type: () -> None
+        # type = () -> None
         super(IkFkTransfer, self).__init__()
         self.getValue = self.getValueFromUI
 
     # ----------------------------------------------------------------
 
     def getChangeAttrName(self):
-        # type: () -> str
+        # type = () -> str
         return "{}.{}".format(self.getHostName(), self.switchedAttrShortName)
 
     def getChangeRollAttrName(self):
-        # type: () -> str
+        # type = () -> str
         at_name = self.switchedAttrShortName.replace("blend", "roll")
         at = "{}.{}".format(
             self.getHostName(),
@@ -2103,11 +2103,11 @@ class IkFkTransfer(AbstractAnimationTransfer):
             return self.ikCtrl[0].attr(at_name)
 
     def changeAttrToBoundValue(self):
-        # type: () -> None
+        # type = () -> None
         pm.setAttr(self.getChangeAttrName(), self.getValue())
 
     def getValueFromUI(self):
-        # type: () -> float
+        # type = () -> float
         if self.comboBoxSpaces.currentIndex() == 0:
             # IK
             if self.getChangeAttrName().endswith("_Switch"):
@@ -2122,7 +2122,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
                 return 0.0
 
     def _getNode(self, name):
-        # type: (str) -> pm.nodetypes.Transform
+        # type = (str) -> pm.nodetypes.Transform
         node = getNode(":".join([self.nameSpace, name]))
 
         if not node:
@@ -2131,7 +2131,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
         return node
 
     def _getMth(self, name):
-        # type: (str) -> pm.nodetypes.Transform
+        # type = (str) -> pm.nodetypes.Transform
         node = self._getNode(name)
         if node.hasAttr("match_ref"):
             match_node = node.match_ref.listConnections()
@@ -2143,7 +2143,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
             return self._getNode("_".join(tmp))
 
     def setCtrls(self, fks, ik, upv, ikRot):
-        # type: (list[str], str, str) -> None
+        # type = (list[str], str, str) -> None
         """gather core PyNode represented each controllers"""
 
         if not isinstance(ik, list):
@@ -2196,7 +2196,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
         *args,
         **kargs,
     ):
-        # type: (int, int, bool, str, *str, **str) -> None
+        # type = (int, int, bool, str, *str, **str) -> None
 
         def fk_definition():
             src_nodes = self.fkTargets[:]
@@ -2257,7 +2257,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
     # ----------------------------------------------------------------
     # re implement doItbyUI to have access to self.hasIKrot option
     def doItByUI(self):
-        # type: () -> None
+        # type = () -> None
 
         # gather settings from UI
         startFrame = self.startFrame_value.value()
@@ -2279,7 +2279,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
 
     @staticmethod
     def showUI(model, ikfk_attr, uihost, fks, ik, upv, ikRot, *args):
-        # type: (pm.nodetypes.Transform, str, str,
+        # type = (pm.nodetypes.Transform, str, str,
         # List[str], str, str, *str) -> None
 
         try:
@@ -2324,9 +2324,11 @@ class IkFkTransfer(AbstractAnimationTransfer):
         onlyKeyframes=None,
         switchTo=None,
     ):
-        # type: (pm.nodetypes.Transform, str, str,
+
+        """transfer without displaying UI
+        # type = (pm.nodetypes.Transform, str, str,
         # List[str], str, str, int, int, bool, str) -> None
-        """transfer without displaying UI"""
+        """
 
         if startFrame is None:
             startFrame = int(pm.playbackOptions(q=True, ast=True))
@@ -2354,7 +2356,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
 
     @staticmethod
     def toIK(model, ikfk_attr, uihost, fks, ik, upv, ikRot, **kwargs):
-        # type: (pm.nodetypes.Transform, str, str,
+        # type = (pm.nodetypes.Transform, str, str,
         # List[str], str, str, **str) -> None
 
         kwargs.update({"switchTo": "ik"})
@@ -2364,7 +2366,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
 
     @staticmethod
     def toFK(model, ikfk_attr, uihost, fks, ik, upv, ikRot, **kwargs):
-        # type: (pm.nodetypes.Transform, str, str,
+        # type = (pm.nodetypes.Transform, str, str,
         # List[str], str, str, **str) -> None
 
         kwargs.update({"switchTo": "fk"})
