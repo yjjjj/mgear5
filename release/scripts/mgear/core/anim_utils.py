@@ -435,9 +435,7 @@ def listAttrForMirror(node):
     res = ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "ro"]
     res.extend(cmds.listAttr(node, userDefined=True, shortNames=True))
     res = list([x for x in res if not x.startswith("inv")])
-    res = list(
-        [x for x in res if node.attr(x).type() not in ["message", "string"]]
-    )
+    res = list([x for x in res if node.attr(x).type() not in ["message", "string"]])
     return res
 
 
@@ -677,9 +675,7 @@ def getComboIndex(model, object_name, combo_attr):
     return getComboIndex_with_namespace(nameSpace, object_name, combo_attr)
 
 
-def changeSpace_with_namespace(
-    namespace, uiHost, combo_attr, cnsIndex, ctl_names
-):
+def changeSpace_with_namespace(namespace, uiHost, combo_attr, cnsIndex, ctl_names):
     """Change the space of a control
 
     i.e: A control with ik reference array
@@ -774,18 +770,12 @@ def change_rotate_order(control, target_order):
     anim_curves = []
     for axe in ["x", "y", "z"]:
         anim_curves.extend(
-            cmds.listConnections(
-                "{}.r{}".format(control, axe), type="animCurve"
-            )
-            or []
+            cmds.listConnections("{}.r{}".format(control, axe), type="animCurve") or []
         )
 
     # gets keyframe on rotateOrder attribute if any
     rotate_order_anim = (
-        cmds.listConnections(
-            "{}.rotateOrder".format(control), type="animCurve"
-        )
-        or []
+        cmds.listConnections("{}.rotateOrder".format(control), type="animCurve") or []
     )
 
     # get unique timeline values for all rotate keyframe
@@ -811,13 +801,9 @@ def change_rotate_order(control, target_order):
     cmds.setAttr("{}.rotateOrder".format(holder, rotate_orders[target_order]))
     for frame in frames:
         cmds.currentTime(frame)
-        position = cmds.xform(
-            control, query=True, worldSpace=True, matrix=True
-        )
+        position = cmds.xform(control, query=True, worldSpace=True, matrix=True)
         cmds.xform(holder, worldSpace=True, matrix=position)
-        positions[frame] = cmds.xform(
-            holder, query=True, worldSpace=True, matrix=True
-        )
+        positions[frame] = cmds.xform(holder, query=True, worldSpace=True, matrix=True)
 
     # change rotate order
     if rotate_order_anim:
@@ -827,9 +813,7 @@ def change_rotate_order(control, target_order):
             valueChange=rotate_orders[target_order],
         )
     else:
-        cmds.setAttr(
-            "{}.rotateOrder".format(control), rotate_orders[target_order]
-        )
+        cmds.setAttr("{}.rotateOrder".format(control), rotate_orders[target_order])
 
     for frame in frames:
         cmds.currentTime(frame)
@@ -980,22 +964,12 @@ def ikFkMatch_with_namespace2(
 
     # if is FK then snap IK
     elif val == fk_val:
-        transform.matchWorldTransform(
-            ik_targets["ik_control"], ik_ctrl["ik_control"]
-        )
-        transform.matchWorldTransform(
-            ik_targets["pole_vector"], ik_ctrl["pole_vector"]
-        )
+        transform.matchWorldTransform(ik_targets["ik_control"], ik_ctrl["ik_control"])
+        transform.matchWorldTransform(ik_targets["pole_vector"], ik_ctrl["pole_vector"])
         try:
-            transform.matchWorldTransform(
-                ik_targets["toes_ik"], ik_ctrl["toes_ik"]
-            )
-            transform.matchWorldTransform(
-                ik_targets["toeRollIk"], ik_ctrl["toeRollIk"]
-            )
-            transform.matchWorldTransform(
-                ik_targets["heelIk"], ik_ctrl["heelIk"]
-            )
+            transform.matchWorldTransform(ik_targets["toes_ik"], ik_ctrl["toes_ik"])
+            transform.matchWorldTransform(ik_targets["toeRollIk"], ik_ctrl["toeRollIk"])
+            transform.matchWorldTransform(ik_targets["heelIk"], ik_ctrl["heelIk"])
             transform.matchWorldTransform(
                 ik_targets["reverse_ankle_ik"], ik_ctrl["reverse_ankle_ik"]
             )
@@ -1079,9 +1053,7 @@ def ikFkMatch_with_namespace(
             # keyframes
             if key:
                 for x in fks_gimbal + [ik_gimbal]:
-                    pm.setKeyframe(
-                        x, time=(cmds.currentTime(query=True) - 1.0)
-                    )
+                    pm.setKeyframe(x, time=(cmds.currentTime(query=True) - 1.0))
             gimbal_exist = True
     except:
         pass
@@ -1282,9 +1254,7 @@ def ikFkMatch_with_namespace(
     # sets keyframes
     if key:
         [
-            cmds.setKeyframe(
-                "{}".format(elem), time=(cmds.currentTime(query=True))
-            )
+            cmds.setKeyframe("{}".format(elem), time=(cmds.currentTime(query=True)))
             for elem in _all_controls
         ]
         if gimbal_exist:
@@ -1339,9 +1309,7 @@ def spine_IKToFK(fkControls, ikControls, matchMatrix_dict=None):
     """
     if matchMatrix_dict is None:
         currentTime = pm.currentTime(q=True)
-        matchMatrix_dict = recordNodesMatrices(
-            fkControls, desiredTime=currentTime
-        )
+        matchMatrix_dict = recordNodesMatrices(fkControls, desiredTime=currentTime)
 
     attribute.reset_SRT(ikControls)
 
@@ -1362,9 +1330,7 @@ def spine_FKToIK(fkControls, ikControls, matchMatrix_dict=None):
     # record the position of controls prior to reseting
     if matchMatrix_dict is None:
         currentTime = pm.currentTime(q=True)
-        matchMatrix_dict = recordNodesMatrices(
-            fkControls, desiredTime=currentTime
-        )
+        matchMatrix_dict = recordNodesMatrices(fkControls, desiredTime=currentTime)
 
     # reset both fk, ik controls
     attribute.reset_SRT(ikControls)
@@ -1732,9 +1698,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         self.endFrame_value.setMaximum(999999)
         self.populateRange(True)
         self.allFrames_button = QtWidgets.QPushButton("All Frames")
-        self.timeSliderFrames_button = QtWidgets.QPushButton(
-            "Time Slider Frames"
-        )
+        self.timeSliderFrames_button = QtWidgets.QPushButton("Time Slider Frames")
 
         self.comboBoxSpaces = QtWidgets.QComboBox()
         self.comboBoxSpaces.addItems(self.comboItems)
@@ -1780,12 +1744,8 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         # type = () -> None
 
         self.spaceTransfer_button.clicked.connect(self.doItByUI)
-        self.allFrames_button.clicked.connect(
-            partial(self.populateRange, False)
-        )
-        self.timeSliderFrames_button.clicked.connect(
-            partial(self.populateRange, True)
-        )
+        self.allFrames_button.clicked.connect(partial(self.populateRange, False))
+        self.timeSliderFrames_button.clicked.connect(partial(self.populateRange, True))
 
     # SLOTS ##########################################################
 
@@ -1847,9 +1807,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         # type = () -> str
         return ":".join([self.nameSpace, self.uihost])
 
-    def getWorldMatrices(
-        self, start, end, val_src_nodes, pole_vector_matrices=None
-    ):
+    def getWorldMatrices(self, start, end, val_src_nodes, pole_vector_matrices=None):
         # type = (int, int, List[pm.nodetypes.Transform]) ->
         # List[List[pm.datatypes.Matrix]]
         """returns matrice List[frame][controller number]."""
@@ -1885,9 +1843,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
 
     def transfer(self, startFrame, endFrame, onlyKeyframes, *args, **kwargs):
         # type = (int, int, bool, *str, **str) -> None
-        raise NotImplementedError(
-            "must be implemented in each " "specialized class"
-        )
+        raise NotImplementedError("must be implemented in each " "specialized class")
 
     def doItByUI(self):
         # type = () -> None
@@ -1903,9 +1859,7 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         # set the new space value in the synoptic combobox
         if self.comboObj is not None:
             if isinstance(self.comboObj, QtWidgets.QComboBox):
-                self.comboObj.setCurrentIndex(
-                    self.comboBoxSpaces.currentIndex()
-                )
+                self.comboObj.setCurrentIndex(self.comboBoxSpaces.currentIndex())
 
         for c in pyqt.maya_main_window().children():
             if isinstance(c, AbstractAnimationTransfer):
@@ -2021,9 +1975,7 @@ class ParentSpaceTransfer(AbstractAnimationTransfer):
     def setGroupBoxTitle(self):
         if hasattr(self, "groupBox"):
             # TODO: extract logic with naming convention
-            part = "_".join(
-                self.ctrlNode.name().split(":")[-1].split("_")[:-1]
-            )
+            part = "_".join(self.ctrlNode.name().split(":")[-1].split("_")[:-1])
             self.groupBox.setTitle(part)
 
     def transfer(self, startFrame, endFrame, onlyKeyframes, *args, **kwargs):
@@ -2176,9 +2128,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
         if hasattr(self, "groupBox"):
             if len(self.ikCtrl) == 1:
                 # TODO: extract logic with naming convention
-                part = "_".join(
-                    self.ikCtrl[0].name().split(":")[-1].split("_")[:-2]
-                )
+                part = "_".join(self.ikCtrl[0].name().split(":")[-1].split("_")[:-2])
             else:
                 part = "MULTI Transfer"
 
@@ -2324,7 +2274,6 @@ class IkFkTransfer(AbstractAnimationTransfer):
         onlyKeyframes=None,
         switchTo=None,
     ):
-
         """transfer without displaying UI
         # type = (pm.nodetypes.Transform, str, str,
         # List[str], str, str, int, int, bool, str) -> None
@@ -2360,9 +2309,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
         # List[str], str, str, **str) -> None
 
         kwargs.update({"switchTo": "ik"})
-        IkFkTransfer.execute(
-            model, ikfk_attr, uihost, fks, ik, upv, ikRot, **kwargs
-        )
+        IkFkTransfer.execute(model, ikfk_attr, uihost, fks, ik, upv, ikRot, **kwargs)
 
     @staticmethod
     def toFK(model, ikfk_attr, uihost, fks, ik, upv, ikRot, **kwargs):
@@ -2370,9 +2317,7 @@ class IkFkTransfer(AbstractAnimationTransfer):
         # List[str], str, str, **str) -> None
 
         kwargs.update({"switchTo": "fk"})
-        IkFkTransfer.execute(
-            model, ikfk_attr, uihost, fks, ik, upv, ikRot, **kwargs
-        )
+        IkFkTransfer.execute(model, ikfk_attr, uihost, fks, ik, upv, ikRot, **kwargs)
 
 
 # Baker Springs
@@ -2391,9 +2336,7 @@ def clearSprings(model=None):
         model = getRootNode()
 
     springNodes = getControlers(model, gSuffix=PLOT_GRP_SUFFIX)
-    pairblends = [
-        sn.listConnections(type="pairBlend")[0] for sn in springNodes
-    ]
+    pairblends = [sn.listConnections(type="pairBlend")[0] for sn in springNodes]
 
     for pb in pairblends:
         animCrvs = pb.listConnections(type="animCurveTA")
