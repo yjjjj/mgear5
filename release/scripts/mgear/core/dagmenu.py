@@ -412,7 +412,7 @@ def __switch_parent_callback(*args):
     """
 
     # creates a map for non logical components controls
-    control_map = {"elbow": "mid", "rot": "orbit", "knee": "mid"}
+    control_map = {"elbow": ["mid"], "rot":[ "orbit"], "knee": ["mid"], "ik": ["headIK"]}
 
     # switch_control = args[0].split("|")[-1].split(":")[-1]
     switch_control = args[0].split("|")[-1]
@@ -446,7 +446,7 @@ def __switch_parent_callback(*args):
                 break
             elif (
                 search_token in control_map.keys()
-                and ctl.ctl_role.get() == control_map[search_token]
+                and ctl.ctl_role.get() in control_map[search_token]
             ):
                 target_control = ctl.stripNamespace()
                 break
