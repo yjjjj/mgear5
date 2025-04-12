@@ -703,14 +703,14 @@ def changeSpace_with_namespace(namespace, uiHost, combo_attr, cnsIndex, ctl_name
         else:
             ctl = getNode(c_name)
 
-        sWM.append(ctl.getMatrix(worldSpace=True))
+        sWM.append(transform.get_world_transform_data(ctl))
         controls.append(ctl)
 
     oAttr = node.attr(combo_attr)
     oAttr.set(cnsIndex)
 
     for e, ctl in enumerate(controls):
-        ctl.setMatrix(sWM[e], worldSpace=True)
+        transform.set_world_transform_data(ctl, sWM[e])
 
 
 def changeSpace(model, uiHost, combo_attr, cnsIndex, ctl_names):
@@ -1977,6 +1977,67 @@ class ParentSpaceTransfer(AbstractAnimationTransfer):
             # TODO: extract logic with naming convention
             part = "_".join(self.ctrlNode.name().split(":")[-1].split("_")[:-1])
             self.groupBox.setTitle(part)
+
+    @utils.one_undo
+    @utils.viewport_off
+    def bakeAnimation(
+        self,
+        switch_attr_name,
+        val_src_nodes,
+        key_src_nodes,
+        key_dst_nodes,
+        startFrame,
+        endFrame,
+        onlyKeyframes=True,
+        definition="",
+    ):
+
+        channels = ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz"]
+
+        src_keys = pm.keyframe(key_src_nodes, at=["t", "r", "s"], q=True)
+        if src_keys:
+
+            keyframeList = sorted(set(src_keys))
+        else:
+            pm.displayWarning("No keys to transfer.")
+            return
+        
+        # get world transform data for the source nodes
+        # and store them in a list for each frame
+        world_transform_data = []
+        for i, x in enumerate(range(startFrame, endFrame + 1)):
+            world_transform_data_frame = []
+            if onlyKeyframes and x not in keyframeList:
+                continue
+
+            pm.currentTime(x)
+            for j, n in enumerate(val_src_nodes):
+                world_transform_data_frame.append(transform.get_world_transform_data(n))
+
+            world_transform_data.append(world_transform_data_frame)
+        
+        # delete animation in the space switch channel and destination ctrls
+        pm.cutKey(key_dst_nodes, at=channels, time=(startFrame, endFrame))
+        pm.cutKey(switch_attr_name, time=(startFrame, endFrame))
+
+        # set world transform data to the destination nodes
+        # and set keyframes for the switch attribute
+        for i, x in enumerate(range(startFrame, endFrame + 1)):
+
+            if onlyKeyframes and x not in keyframeList:
+                continue
+
+            pm.currentTime(x)
+
+            # set the new space in the channel
+            self.changeAttrToBoundValue()
+
+            # bake the stored transforms to the cotrols
+            for j, n in enumerate(key_dst_nodes):
+                transform.set_world_transform_data(n, world_transform_data[i][j])
+
+            pm.setKeyframe(key_dst_nodes, at=channels)
+            pm.setKeyframe(switch_attr_name)
 
     def transfer(self, startFrame, endFrame, onlyKeyframes, *args, **kwargs):
         # type = (int, int, bool, *str, **str) -> None

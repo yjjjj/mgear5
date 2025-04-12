@@ -1,7 +1,7 @@
 """Functions to work with vectors"""
 
 import math
-
+import maya.cmds as cmds
 import maya.OpenMaya as OpenMaya
 
 from mgear.pymaya import datatypes
@@ -216,6 +216,38 @@ def calculatePoleVector(p1, p2, p3, poleDistance=1, time=1):
     pole_vector = (mid_pointer.normal() * distance) + vec2
 
     return pole_vector
+
+
+def subtract_3Dvectors_list(vec_a, vec_b):
+    """Subtract two 3D vectors represented as lists.
+
+    Args:
+        vec_a (list): First vector [x, y, z].
+        vec_b (list): Second vector [x, y, z].
+
+    Returns:
+        list: Resulting vector after subtraction.
+    """
+    if len(vec_a) != 3 or len(vec_b) != 3:
+        raise ValueError("Both vectors must have 3 elements.")
+
+    return [a - b for a, b in zip(vec_a, vec_b)]
+
+
+def add_3Dvectors_list(vec_a, vec_b):
+    """Add two 3D vectors represented as lists.
+
+    Args:
+        vec_a (list): First vector [x, y, z].
+        vec_b (list): Second vector [x, y, z].
+
+    Returns:
+        list: Resulting vector after addition.
+    """
+    if len(vec_a) != 3 or len(vec_b) != 3:
+        raise ValueError("Both vectors must have 3 elements.")
+
+    return [a + b for a, b in zip(vec_a, vec_b)]
 
 
 ##########################################################
