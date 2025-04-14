@@ -1,6 +1,39 @@
 Release Log
 ===========
 
+
+
+5.0.6
+------
+**Enhancements**
+	* PyMaya: Shifter: Collecting data only when will be stored. Removed the flush undo. Now we can undo rig builds. pymaya: Python wrapper for mGear #263
+	* Shifter: Adding new Shifter Templates + fix bug on EPIC_met_01 when no control added #306
+	* Shifter: Allow to connect to a non reset rotation joints.  closes #480
+	* Shifter: Data collector is production ready. Removed "Experimental" in UI #383
+
+**Bug Fix**
+	* adding Maya 2026 windows solvers
+	* Adjust ihi Behavior Based on Mode Type Instead of Step Type closes #472
+	* After setting up RBF, the RBF Manager2 window does not open again. fixes #471
+	* Anim_utils: IK/FK match set key automatically if any related control has already key. Previous fix was for ikFkMatch_with_namespace2, this fix is fro ikFkMatch_with_namespace #445
+	* Core: Anim_utils: space switch and range switch doesn't support rotation pivot offset Fixes #487
+	* Core: Dagmenu: add neck ik control map for __switch_parent_callback #487
+	* CORE: Maya 2026 support to new addDoubleLinear node naming
+	* EPIC chain IK_FK_01 filing building using mode FK/IK. Fixes #466
+	* EPIC_meta: fix control Relative relations
+	* Fixed missing "size" on Guide file builds #486
+	* Fixed rotation pymel bug, replaced all pymel commands
+	* PyMaya: fix error catch when name clashing in the guides #263
+	* PyMaya: fix SoftTweak error catching #263
+	* Rigbits: ProxySlice: Refactor to maya cmds. fixes #469
+	* Shifter Component 3jnt legs. Change component internal joint visibility to avoid hiding child components closes #483
+	* Shifter: Collect data fix WIP. Related with the new Pymaya wrapper and MVector parsing #263
+	* Shifter: Quadruped leg IK/FK offset bug, IK/FK match menu and misc IK/FK matching .Update EPIC_3jnt_leg and Classic 3_jnt_leg fixes #445
+	* Skin import issue (skinned NURBS curve) fixes #477
+	* UI_Slider_01 component fails during installation. fixes #464
+	* When using anim_utils.IkFkTransfer.execute(), only baking to FK works correctly ( includes possible fix ) fixes #406
+
+
 5.0.5
 ------
 **Bug Fix**
