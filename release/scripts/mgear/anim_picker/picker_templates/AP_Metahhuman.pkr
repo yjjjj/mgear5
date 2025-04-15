@@ -869,8 +869,8 @@
                             180
                         ],
                         "position": [
-                            -225.9613755663168,
-                            459.97610688537725
+                            -510.73998016134544,
+                            -458.58637091475765
                         ],
                         "rotation": 0.0,
                         "handles": [
@@ -941,8 +941,8 @@
                             180
                         ],
                         "position": [
-                            -227.42559428029284,
-                            429.6267348536415
+                            -512.2041988753215,
+                            -488.9357429464934
                         ],
                         "rotation": 0.0,
                         "handles": [
@@ -975,8 +975,8 @@
                             180
                         ],
                         "position": [
-                            -202.0044460417384,
-                            439.082460932145
+                            -486.78305063676703,
+                            -479.4800168679899
                         ],
                         "rotation": 0.0,
                         "handles": [
@@ -1009,8 +1009,8 @@
                             180
                         ],
                         "position": [
-                            -218.32540139157157,
-                            395.27242303705697
+                            -503.1040059866002,
+                            -523.2900547630779
                         ],
                         "rotation": 0.0,
                         "handles": [
@@ -1043,8 +1043,8 @@
                             255
                         ],
                         "position": [
-                            -253.08669339420015,
-                            439.082460932145
+                            -537.8652979892288,
+                            -479.4800168679899
                         ],
                         "rotation": 0.0,
                         "handles": [
@@ -1077,8 +1077,8 @@
                             255
                         ],
                         "position": [
-                            -237.27359270839708,
-                            395.3503394721896
+                            -522.0521973034257,
+                            -523.2121383279452
                         ],
                         "rotation": 0.0,
                         "handles": [
@@ -1901,7 +1901,7 @@
                             255
                         ],
                         "position": [
-                            134.78865429734867,
+                            135.94787747831998,
                             -409.1953005615284
                         ],
                         "rotation": 0.0,
@@ -1926,7 +1926,7 @@
                         "controls": [
                             "foot_L0_roll_ctl"
                         ],
-                        "text": "Rool Foot",
+                        "text": "Ro;l Foot",
                         "text_size": 10.0,
                         "text_color": [
                             0,
@@ -2254,8 +2254,8 @@
                             255
                         ],
                         "position": [
-                            334.93327789679313,
-                            296.27618439658465
+                            195.57353522263026,
+                            427.1531601253638
                         ],
                         "rotation": 0.0,
                         "handles": [
@@ -2319,7 +2319,7 @@
                         ],
                         "action_mode": true,
                         "action_script": "from mgear.anim_picker.handlers import action_handlers\naction_handlers.show_space_chage_list(__NAMESPACE__,\n                              \"legUI_R0_ctl\",\n                              \"leg_ikref\",\n                              \"leg_R0_ik_ctl\",\n                              __SELF__,\n                              __INIT__)",
-                        "text": "main_02_C0_ctl",
+                        "text": "root_C0_ctl",
                         "text_size": 11.0,
                         "text_color": [
                             255,
@@ -2520,47 +2520,6 @@
                             255,
                             255,
                             255,
-                            255
-                        ]
-                    },
-                    {
-                        "color": [
-                            255,
-                            216,
-                            58,
-                            255
-                        ],
-                        "position": [
-                            334.93327789679313,
-                            180.40968205455644
-                        ],
-                        "rotation": 0.0,
-                        "handles": [
-                            [
-                                -59.07521014585806,
-                                14.142135623730951
-                            ],
-                            [
-                                -59.07521014585806,
-                                -14.14213562373095
-                            ],
-                            [
-                                59.07521014585806,
-                                -14.142135623730955
-                            ],
-                            [
-                                59.07521014585807,
-                                14.142135623730947
-                            ]
-                        ],
-                        "action_mode": true,
-                        "action_script": "from mgear.anim_picker.handlers import action_handlers\n\n\nif not __INIT__:\n    fkControls = [\"spine_C0_fk0_ctl\", \"spine_C0_fk1_ctl\", \"spine_C0_fk2_ctl\", \"spine_C0_fk3_ctl\", \"spine_C0_fk4_ctl\"]\n    ikControls = [\"spine_C0_ik0_ctl\", \"spine_C0_ik1_ctl\", \"spine_C0_spinePosition_ctl\", \"spine_C0_tan0_ctl\", \"spine_C0_tan_ctl\", \"spine_C0_tan1_ctl\"]\n    action_handlers.spine_ik_fk_transfer(__NAMESPACE__, fkControls, ikControls)",
-                        "text": "spine IK/FK",
-                        "text_size": 11.0,
-                        "text_color": [
-                            0,
-                            0,
-                            0,
                             255
                         ]
                     },
@@ -2969,7 +2928,7 @@
                         ],
                         "action_mode": true,
                         "action_script": "from mgear.anim_picker.handlers import action_handlers\naction_handlers.show_space_chage_list(__NAMESPACE__,\n                              \"legUI_L0_ctl\",\n                              \"leg_ikref\",\n                              \"leg_L0_ik_ctl\",\n                              __SELF__,\n                              __INIT__)",
-                        "text": "main_02_C0_ctl",
+                        "text": "root_C0_ctl",
                         "text_size": 11.0,
                         "text_color": [
                             255,
@@ -3120,8 +3079,8 @@
                             0
                         ],
                         "position": [
-                            334.93327789679313,
-                            273.63931984005205
+                            195.5735352226302,
+                            404.5162955688312
                         ],
                         "rotation": 0.0,
                         "handles": [
@@ -3206,37 +3165,6 @@
                             0,
                             0,
                             0,
-                            255
-                        ]
-                    },
-                    {
-                        "color": [
-                            0,
-                            85,
-                            0,
-                            0
-                        ],
-                        "position": [
-                            334.9332778967932,
-                            155.68547868278426
-                        ],
-                        "rotation": 0.0,
-                        "handles": [
-                            [
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                8.086218758946302,
-                                1.2212453270876722e-15
-                            ]
-                        ],
-                        "text": "SPINE",
-                        "text_size": 10.0,
-                        "text_color": [
-                            255,
-                            255,
-                            255,
                             255
                         ]
                     },
@@ -4400,8 +4328,8 @@
                             0
                         ],
                         "position": [
-                            -229.84356751712863,
-                            366.21065029991297
+                            -514.6221721121572,
+                            -552.351827500222
                         ],
                         "rotation": 0.0,
                         "handles": [
@@ -7035,8 +6963,8 @@
                             255
                         ],
                         "position": [
-                            -134.78865429734867,
-                            -409.1953005615284
+                            -133.62943111637736,
+                            -409.19530056152837
                         ],
                         "rotation": 360.0,
                         "handles": [
@@ -7060,7 +6988,7 @@
                         "controls": [
                             "foot_R0_roll_ctl"
                         ],
-                        "text": "Rool Foot",
+                        "text": "Roll Foot",
                         "text_size": 10.0,
                         "text_color": [
                             0,
@@ -7590,8 +7518,8 @@
                             255
                         ],
                         "position": [
-                            334.93327789679313,
-                            355.83380295474217
+                            102.26309882340809,
+                            429.7550577645155
                         ],
                         "rotation": -45.0,
                         "handles": [
@@ -7656,8 +7584,8 @@
                             0
                         ],
                         "position": [
-                            334.93327789679313,
-                            326.89192911020575
+                            102.26309882340801,
+                            400.81318391997917
                         ],
                         "rotation": 0.0,
                         "handles": [
@@ -7687,8 +7615,8 @@
                             255
                         ],
                         "position": [
-                            334.93327789679313,
-                            241.50526745224718
+                            151.37831943718044,
+                            65.80292753636118
                         ],
                         "rotation": -45.0,
                         "handles": [
@@ -7753,8 +7681,8 @@
                             0
                         ],
                         "position": [
-                            334.93327789679313,
-                            215.01329079705008
+                            151.3783194371804,
+                            39.31095088116409
                         ],
                         "rotation": 0.0,
                         "handles": [
@@ -8451,7 +8379,7 @@
                             ]
                         ],
                         "action_mode": true,
-                        "action_script": "import pymel.core as pm\nif not __INIT__:\n    grp = \"rig_controllers_grp\"\n    if __NAMESPACE__:\n        grp = __NAMESPACE__ + \":\" + grp\n\n    members = pm.PyNode(grp).members()\n    pm.select(members, r=True)",
+                        "action_script": "if not __INIT__:\n    import maya.cmds as cmds\n    grp = \"rig_controllers_grp\"\n    if __NAMESPACE__:\n        grp = __NAMESPACE__ + \":\" + grp\n\n  \n    cmds.select(grp, replace=True)",
                         "text": "Select ALL",
                         "text_size": 10.0,
                         "text_color": [
@@ -8492,7 +8420,7 @@
                             ]
                         ],
                         "action_mode": true,
-                        "action_script": "import pymel.core as pm\nif not __INIT__:\n    grp = \"rig_controllers_grp\"\n    if __NAMESPACE__:\n        grp = __NAMESPACE__ + \":\" + grp\n\n    members = pm.PyNode(grp).members()\n    pm.setKeyframe(members)",
+                        "action_script": "if not __INIT__:\n    import mgear.pymaya as pm\n    import maya.cmds as cmds\n    grp = \"rig_controllers_grp\"\n    if __NAMESPACE__:\n        grp = __NAMESPACE__ + \":\" + grp\n\n\n    pm.setKeyframe(grp)",
                         "text": "Key ALL",
                         "text_size": 10.0,
                         "text_color": [
@@ -8574,7 +8502,7 @@
                             ]
                         ],
                         "action_mode": true,
-                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\nif not __INIT__:\n    import pymel.core as pm\n    import mgear.core.pickWalk as pw\n    pw.walkMirror(pm.selected())\n",
+                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\nif not __INIT__:\n    import mgear.pymaya as pm\n    import mgear.core.pickWalk as pw\n    pw.walkMirror(pm.selected())\n",
                         "text": "Mirror Selected",
                         "text_size": 8.0,
                         "text_color": [
@@ -8615,7 +8543,7 @@
                             ]
                         ],
                         "action_mode": true,
-                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\nimport pymel.core as pm\nimport maya.cmds as cmds\nfrom mgear.core.anim_utils import mirrorPose \nif not __INIT__:  \n    current_selection = cmds.ls(selection=True)\n    controls = [pm.PyNode(x) for x in current_selection]\n    for ctl in controls:\n        mirrorPose(flip=True, nodes=[ctl])\n",
+                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\n\nif not __INIT__:  \n    import mgear.pymaya as pm\n    import maya.cmds as cmds\n    from mgear.core.anim_utils import mirrorPose \n    current_selection = cmds.ls(selection=True)\n    controls = [pm.PyNode(x) for x in current_selection]\n    for ctl in controls:\n        mirrorPose(flip=True, nodes=[ctl])\n",
                         "text": "Flip Pose",
                         "text_size": 9.0,
                         "text_color": [
@@ -8656,7 +8584,7 @@
                             ]
                         ],
                         "action_mode": true,
-                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\nimport pymel.core as pm\nimport maya.cmds as cmds\nfrom mgear.core.anim_utils import mirrorPose \nif not __INIT__:  \n    current_selection = cmds.ls(selection=True)\n    controls = [pm.PyNode(x) for x in current_selection]\n    for ctl in controls:\n        mirrorPose(flip=False, nodes=[ctl])\n",
+                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\n\nif not __INIT__:  \n    import mgear.pymaya as pm\n    import maya.cmds as cmds\n    from mgear.core.anim_utils import mirrorPose \n    current_selection = cmds.ls(selection=True)\n    controls = [pm.PyNode(x) for x in current_selection]\n    for ctl in controls:\n        mirrorPose(flip=False, nodes=[ctl])\n",
                         "text": "Mirror Pose",
                         "text_size": 9.0,
                         "text_color": [
@@ -8952,12 +8880,20 @@
                         "rotation": 360.0,
                         "handles": [
                             [
-                                0.0,
-                                0.0
+                                1.5185002499880218,
+                                1.5185002499880218
                             ],
                             [
-                                -8.086218758946302,
-                                1.2212453270876722e-15
+                                1.5185002499880218,
+                                -1.5185002499880218
+                            ],
+                            [
+                                -1.5185002499880218,
+                                -1.5185002499880218
+                            ],
+                            [
+                                -1.5185002499880218,
+                                1.5185002499880211
                             ]
                         ],
                         "text": "TOOLS",
@@ -16000,252 +15936,6 @@
                     },
                     {
                         "color": [
-                            255,
-                            255,
-                            255,
-                            175
-                        ],
-                        "position": [
-                            -470.69734599405643,
-                            456.87962141284754
-                        ],
-                        "rotation": 0.0,
-                        "handles": [
-                            [
-                                -40.955327956162705,
-                                12.041521745697725
-                            ],
-                            [
-                                -40.955327956162705,
-                                -12.041521745697725
-                            ],
-                            [
-                                40.955327956162705,
-                                -12.041521745697727
-                            ],
-                            [
-                                40.95532795616272,
-                                12.041521745697725
-                            ]
-                        ],
-                        "action_mode": true,
-                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\nimport pymel.core as pm\nimport maya.cmds as cmds\nfrom mgear.core.anim_utils import mirrorPose \nif not __INIT__:  \n    current_selection = cmds.ls(selection=True)\n    controls = [pm.PyNode(x) for x in current_selection]\n    for ctl in controls:\n        mirrorPose(flip=False, nodes=[ctl])\n",
-                        "text": "Mirror Pose",
-                        "text_size": 9.0,
-                        "text_color": [
-                            0,
-                            0,
-                            0,
-                            255
-                        ]
-                    },
-                    {
-                        "color": [
-                            255,
-                            255,
-                            255,
-                            175
-                        ],
-                        "position": [
-                            -555.6146508435586,
-                            456.87962141284754
-                        ],
-                        "rotation": 0.0,
-                        "handles": [
-                            [
-                                -40.955327956162705,
-                                12.041521745697725
-                            ],
-                            [
-                                -40.955327956162705,
-                                -12.041521745697725
-                            ],
-                            [
-                                40.955327956162705,
-                                -12.041521745697727
-                            ],
-                            [
-                                40.95532795616272,
-                                12.041521745697725
-                            ]
-                        ],
-                        "action_mode": true,
-                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\nimport pymel.core as pm\nimport maya.cmds as cmds\nfrom mgear.core.anim_utils import mirrorPose \nif not __INIT__:  \n    current_selection = cmds.ls(selection=True)\n    controls = [pm.PyNode(x) for x in current_selection]\n    for ctl in controls:\n        mirrorPose(flip=True, nodes=[ctl])\n",
-                        "text": "Flip Pose",
-                        "text_size": 9.0,
-                        "text_color": [
-                            0,
-                            0,
-                            0,
-                            255
-                        ]
-                    },
-                    {
-                        "color": [
-                            255,
-                            255,
-                            255,
-                            175
-                        ],
-                        "position": [
-                            -470.69734599405643,
-                            484.3413324060198
-                        ],
-                        "rotation": 0.0,
-                        "handles": [
-                            [
-                                -40.955327956162705,
-                                12.041521745697725
-                            ],
-                            [
-                                -40.955327956162705,
-                                -12.041521745697725
-                            ],
-                            [
-                                40.955327956162705,
-                                -12.041521745697727
-                            ],
-                            [
-                                40.95532795616272,
-                                12.041521745697725
-                            ]
-                        ],
-                        "action_mode": true,
-                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\nif not __INIT__:\n    import pymel.core as pm\n    import mgear.core.pickWalk as pw\n    pw.walkMirror(pm.selected())\n",
-                        "text": "Mirror Selected",
-                        "text_size": 8.0,
-                        "text_color": [
-                            0,
-                            0,
-                            0,
-                            255
-                        ]
-                    },
-                    {
-                        "color": [
-                            255,
-                            255,
-                            255,
-                            175
-                        ],
-                        "position": [
-                            -555.6146508435586,
-                            484.3413324060198
-                        ],
-                        "rotation": 0.0,
-                        "handles": [
-                            [
-                                -40.955327956162705,
-                                12.041521745697725
-                            ],
-                            [
-                                -40.955327956162705,
-                                -12.041521745697725
-                            ],
-                            [
-                                40.955327956162705,
-                                -12.041521745697727
-                            ],
-                            [
-                                40.95532795616272,
-                                12.041521745697725
-                            ]
-                        ],
-                        "action_mode": true,
-                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\n\nif not __INIT__:\n    from mgear.core import attribute\n    attribute.smart_reset()",
-                        "text": "Reset Selected",
-                        "text_size": 8.0,
-                        "text_color": [
-                            0,
-                            0,
-                            0,
-                            255
-                        ]
-                    },
-                    {
-                        "color": [
-                            255,
-                            255,
-                            255,
-                            175
-                        ],
-                        "position": [
-                            -470.6973459940564,
-                            510.8772392142293
-                        ],
-                        "rotation": 0.0,
-                        "handles": [
-                            [
-                                -40.955327956162705,
-                                12.041521745697725
-                            ],
-                            [
-                                -40.955327956162705,
-                                -12.041521745697725
-                            ],
-                            [
-                                40.955327956162705,
-                                -12.041521745697727
-                            ],
-                            [
-                                40.95532795616272,
-                                12.041521745697725
-                            ]
-                        ],
-                        "action_mode": true,
-                        "action_script": "import pymel.core as pm\nif not __INIT__:\n    grp = \"rig_controllers_grp\"\n    if __NAMESPACE__:\n        grp = __NAMESPACE__ + \":\" + grp\n\n    members = pm.PyNode(grp).members()\n    pm.setKeyframe(members)",
-                        "text": "Key ALL",
-                        "text_size": 10.0,
-                        "text_color": [
-                            0,
-                            0,
-                            0,
-                            255
-                        ]
-                    },
-                    {
-                        "color": [
-                            255,
-                            255,
-                            255,
-                            175
-                        ],
-                        "position": [
-                            -555.6146508435586,
-                            510.87723921422923
-                        ],
-                        "rotation": 0.0,
-                        "handles": [
-                            [
-                                -40.955327956162705,
-                                12.041521745697725
-                            ],
-                            [
-                                -40.955327956162705,
-                                -12.041521745697725
-                            ],
-                            [
-                                40.955327956162705,
-                                -12.041521745697727
-                            ],
-                            [
-                                40.95532795616272,
-                                12.041521745697725
-                            ]
-                        ],
-                        "action_mode": true,
-                        "action_script": "import pymel.core as pm\nif not __INIT__:\n    grp = \"rig_controllers_grp\"\n    if __NAMESPACE__:\n        grp = __NAMESPACE__ + \":\" + grp\n\n    members = pm.PyNode(grp).members()\n    pm.select(members, r=True)",
-                        "text": "Select ALL",
-                        "text_size": 10.0,
-                        "text_color": [
-                            0,
-                            0,
-                            0,
-                            255
-                        ]
-                    },
-                    {
-                        "color": [
                             0,
                             170,
                             0,
@@ -17414,6 +17104,293 @@
                             "CTRL_R_jaw_clench",
                             "CTRL_C_jaw",
                             "CTRL_C_jaw_fwdBack"
+                        ]
+                    },
+                    {
+                        "color": [
+                            255,
+                            255,
+                            255,
+                            175
+                        ],
+                        "position": [
+                            -555.6146508435586,
+                            510.87723921422923
+                        ],
+                        "rotation": 0.0,
+                        "handles": [
+                            [
+                                -40.955327956162705,
+                                12.041521745697725
+                            ],
+                            [
+                                -40.955327956162705,
+                                -12.041521745697725
+                            ],
+                            [
+                                40.955327956162705,
+                                -12.041521745697727
+                            ],
+                            [
+                                40.95532795616272,
+                                12.041521745697725
+                            ]
+                        ],
+                        "action_mode": true,
+                        "action_script": "if not __INIT__:\n    import maya.cmds as cmds\n    grp = \"rig_controllers_grp\"\n    if __NAMESPACE__:\n        grp = __NAMESPACE__ + \":\" + grp\n\n  \n    cmds.select(grp, replace=True)",
+                        "text": "Select ALL",
+                        "text_size": 10.0,
+                        "text_color": [
+                            0,
+                            0,
+                            0,
+                            255
+                        ]
+                    },
+                    {
+                        "color": [
+                            255,
+                            255,
+                            255,
+                            175
+                        ],
+                        "position": [
+                            -470.6973459940564,
+                            510.8772392142293
+                        ],
+                        "rotation": 0.0,
+                        "handles": [
+                            [
+                                -40.955327956162705,
+                                12.041521745697725
+                            ],
+                            [
+                                -40.955327956162705,
+                                -12.041521745697725
+                            ],
+                            [
+                                40.955327956162705,
+                                -12.041521745697727
+                            ],
+                            [
+                                40.95532795616272,
+                                12.041521745697725
+                            ]
+                        ],
+                        "action_mode": true,
+                        "action_script": "if not __INIT__:\n    import mgear.pymaya as pm\n    import maya.cmds as cmds\n    grp = \"rig_controllers_grp\"\n    if __NAMESPACE__:\n        grp = __NAMESPACE__ + \":\" + grp\n\n\n    pm.setKeyframe(grp)",
+                        "text": "Key ALL",
+                        "text_size": 10.0,
+                        "text_color": [
+                            0,
+                            0,
+                            0,
+                            255
+                        ]
+                    },
+                    {
+                        "color": [
+                            255,
+                            255,
+                            255,
+                            175
+                        ],
+                        "position": [
+                            -470.69734599405643,
+                            484.3413324060198
+                        ],
+                        "rotation": 0.0,
+                        "handles": [
+                            [
+                                -40.955327956162705,
+                                12.041521745697725
+                            ],
+                            [
+                                -40.955327956162705,
+                                -12.041521745697725
+                            ],
+                            [
+                                40.955327956162705,
+                                -12.041521745697727
+                            ],
+                            [
+                                40.95532795616272,
+                                12.041521745697725
+                            ]
+                        ],
+                        "action_mode": true,
+                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\nif not __INIT__:\n    import mgear.pymaya as pm\n    import mgear.core.pickWalk as pw\n    pw.walkMirror(pm.selected())\n",
+                        "text": "Mirror Selected",
+                        "text_size": 8.0,
+                        "text_color": [
+                            0,
+                            0,
+                            0,
+                            255
+                        ]
+                    },
+                    {
+                        "color": [
+                            255,
+                            255,
+                            255,
+                            175
+                        ],
+                        "position": [
+                            -470.69734599405643,
+                            484.3413324060198
+                        ],
+                        "rotation": 0.0,
+                        "handles": [
+                            [
+                                -40.955327956162705,
+                                12.041521745697725
+                            ],
+                            [
+                                -40.955327956162705,
+                                -12.041521745697725
+                            ],
+                            [
+                                40.955327956162705,
+                                -12.041521745697727
+                            ],
+                            [
+                                40.95532795616272,
+                                12.041521745697725
+                            ]
+                        ],
+                        "action_mode": true,
+                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\nif not __INIT__:\n    import mgear.pymaya as pm\n    import mgear.core.pickWalk as pw\n    pw.walkMirror(pm.selected())\n",
+                        "text": "Mirror Selected",
+                        "text_size": 8.0,
+                        "text_color": [
+                            0,
+                            0,
+                            0,
+                            255
+                        ]
+                    },
+                    {
+                        "color": [
+                            255,
+                            255,
+                            255,
+                            175
+                        ],
+                        "position": [
+                            -555.6146508435586,
+                            484.3413324060198
+                        ],
+                        "rotation": 0.0,
+                        "handles": [
+                            [
+                                -40.955327956162705,
+                                12.041521745697725
+                            ],
+                            [
+                                -40.955327956162705,
+                                -12.041521745697725
+                            ],
+                            [
+                                40.955327956162705,
+                                -12.041521745697727
+                            ],
+                            [
+                                40.95532795616272,
+                                12.041521745697725
+                            ]
+                        ],
+                        "action_mode": true,
+                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\n\nif not __INIT__:\n    from mgear.core import attribute\n    attribute.smart_reset()",
+                        "text": "Reset Selected",
+                        "text_size": 8.0,
+                        "text_color": [
+                            0,
+                            0,
+                            0,
+                            255
+                        ]
+                    },
+                    {
+                        "color": [
+                            255,
+                            255,
+                            255,
+                            175
+                        ],
+                        "position": [
+                            -555.6146508435586,
+                            456.87962141284754
+                        ],
+                        "rotation": 0.0,
+                        "handles": [
+                            [
+                                -40.955327956162705,
+                                12.041521745697725
+                            ],
+                            [
+                                -40.955327956162705,
+                                -12.041521745697725
+                            ],
+                            [
+                                40.955327956162705,
+                                -12.041521745697727
+                            ],
+                            [
+                                40.95532795616272,
+                                12.041521745697725
+                            ]
+                        ],
+                        "action_mode": true,
+                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\n\nif not __INIT__:  \n    import mgear.pymaya as pm\n    import maya.cmds as cmds\n    from mgear.core.anim_utils import mirrorPose \n    current_selection = cmds.ls(selection=True)\n    controls = [pm.PyNode(x) for x in current_selection]\n    for ctl in controls:\n        mirrorPose(flip=True, nodes=[ctl])\n",
+                        "text": "Flip Pose",
+                        "text_size": 9.0,
+                        "text_color": [
+                            0,
+                            0,
+                            0,
+                            255
+                        ]
+                    },
+                    {
+                        "color": [
+                            255,
+                            255,
+                            255,
+                            175
+                        ],
+                        "position": [
+                            -470.69734599405643,
+                            456.87962141284754
+                        ],
+                        "rotation": 0.0,
+                        "handles": [
+                            [
+                                -40.955327956162705,
+                                12.041521745697725
+                            ],
+                            [
+                                -40.955327956162705,
+                                -12.041521745697725
+                            ],
+                            [
+                                40.955327956162705,
+                                -12.041521745697727
+                            ],
+                            [
+                                40.95532795616272,
+                                12.041521745697725
+                            ]
+                        ],
+                        "action_mode": true,
+                        "action_script": "# Custom anim_picker python script window\n# Use the following variables in your code to access         related data:\n# __CONTROLS__ for picker item associated controls         (will return sets and not content).\n# __FLATCONTROLS__ for associated controls and control         set content.\n# __NAMESPACE__ for current picker namespace\n\nif not __INIT__:  \n    import mgear.pymaya as pm\n    import maya.cmds as cmds\n    from mgear.core.anim_utils import mirrorPose \n    current_selection = cmds.ls(selection=True)\n    controls = [pm.PyNode(x) for x in current_selection]\n    for ctl in controls:\n        mirrorPose(flip=False, nodes=[ctl])\n",
+                        "text": "Mirror Pose",
+                        "text_size": 9.0,
+                        "text_color": [
+                            0,
+                            0,
+                            0,
+                            255
                         ]
                     }
                 ]
