@@ -6,6 +6,7 @@ from . import base
 from . import datatypes
 from . import exception
 from . import util
+from .bind import PyNode
 
 
 _SELECTION_LIST = OpenMaya.MSelectionList()
@@ -236,6 +237,8 @@ class MeshVertex(_SingleIndexGeom):
         it = OpenMaya.MItMeshVertex(self.dagPath(), self.component())
         return it.onBoundary()
 
+    def node(self):
+        return PyNode(self.dagPath().partialPathName())
 
 
 class MeshFace(_SingleIndexGeom):
@@ -279,6 +282,9 @@ class MeshFace(_SingleIndexGeom):
         v = om.MVector()
         it.getNormal(v, util.to_mspace(space, as_api2=False))
         return datatypes.Vector(v.x, v.y, v.z)
+
+    def node(self):
+        return PyNode(self.dagPath().partialPathName())
 
 
 class NurbsCurveCV(_SingleIndexGeom):
@@ -359,6 +365,9 @@ class MeshEdge(_SingleIndexGeom):
             comp.addElement(ei)
 
         return MeshEdge(self.dagPath(), comp_obj)
+
+    def node(self):
+        return PyNode(self.dagPath().partialPathName())
 
     def __contains__(self, other):
         if isinstance(other, MeshEdge):

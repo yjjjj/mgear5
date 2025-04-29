@@ -71,9 +71,11 @@ def _getShapes(node, **kwargs):
     return cmd.listRelatives(node, fullPath=True, **kwargs)
 
 
-def _getParent(node, generations=1):
+def _getParent(node, generations=1, shortName=False):
     if generations == 1:
         res = cmd.listRelatives(node, fullPath=True, p=True, c=False)
+        if shortName:
+            res = cmd.listRelatives(node, p=True, c=False)
         if res:
             return res[0]
 
