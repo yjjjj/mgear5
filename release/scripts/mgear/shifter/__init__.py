@@ -112,7 +112,7 @@ def getComponentDirectories():
 def importComponentGuide(comp_type):
     """Import the Component guide"""
     dirs = getComponentDirectories()
-    defFmt = "mgear.core.shifter.component.{}.guide"
+    defFmt = "mgear.shifter.component.{}.guide"
     customFmt = "{}.guide"
 
     module = mgear.core.utils.importFromStandardOrCustomDirectories(
@@ -124,7 +124,7 @@ def importComponentGuide(comp_type):
 def importComponent(comp_type):
     """Import the Component"""
     dirs = getComponentDirectories()
-    defFmt = "mgear.core.shifter.component.{}"
+    defFmt = "mgear.shifter.component.{}"
     customFmt = "{}"
 
     module = mgear.core.utils.importFromStandardOrCustomDirectories(
