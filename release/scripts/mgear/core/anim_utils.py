@@ -1807,38 +1807,19 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         # type = () -> str
         return ":".join([self.nameSpace, self.uihost])
 
-    def getWorldMatrices(self, start, end, val_src_nodes, pole_vector_matrices=None):
+    def getWorldMatrices(self, start, end, val_src_nodes):
         # type = (int, int, List[pm.nodetypes.Transform]) ->
         # List[List[pm.datatypes.Matrix]]
         """returns matrice List[frame][controller number]."""
-        if pole_vector_matrices is None:
-            pole_vector_matrices = []
         res = []
         for idx, x in enumerate(range(start, end + 1)):
             tmp = []
             for n in val_src_nodes:
-                tmp.append(pm.getAttr(n + ".worldMatrix", time=x))
-            try:
-                tmp[-1] = pole_vector_matrices[idx]
-            except IndexError:
-                pass
+                if n:
+                    tmp.append(cmds.getAttr(n + ".worldMatrix", time=x))
+                else:
+                    tmp.append(None)
             res.append(tmp)
-        return res
-
-    def getIKPoleVectorMatrices(self, start, end, fkc):
-        # type = (int, int, List[pm.nodetypes.Transform]) ->
-        # List[List[pm.datatypes.Matrix]]
-        """returns matrice List[frame][controller number]."""
-        from . import vector, transform
-
-        res = []
-        for x in range(start, end + 1):
-            a, b, c, dist = fkc + [1.0]
-            v = vector.calculatePoleVector(a, b, c, dist, time=x)
-            # this needs to be a matrix for the get set method used in the
-            # transfer main loop
-            m = transform.setMatrixPosition(pm.dt.Matrix(), v)
-            res.append(m)
         return res
 
     def transfer(self, startFrame, endFrame, onlyKeyframes, *args, **kwargs):
@@ -1893,23 +1874,14 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
         # )
 
         channels = ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz"]
-
         # right here we need to generate the matrix positions by calculating
         # them if we have 3 fk controls.  Once we've grabbed the solved
         # pole vector positions, we'll insert them into the list by passing
         # them into the getWorldMatrix function.
         # Doing it thisway should be safe as we've touched the least amount
         # of code.
-        poleVectorMatrices = []
-        if definition.upper() == "IK":
-            if len(key_src_nodes) == 3:
-                poleVectorMatrices = self.getIKPoleVectorMatrices(
-                    startFrame, endFrame, key_src_nodes
-                )
-
         worldMatrixList = self.getWorldMatrices(
-            startFrame, endFrame, val_src_nodes, poleVectorMatrices
-        )
+            startFrame, endFrame, val_src_nodes)
 
         src_keys = pm.keyframe(key_src_nodes, at=["t", "r", "s"], q=True)
         if src_keys:
@@ -1935,7 +1907,8 @@ class AbstractAnimationTransfer(QtWidgets.QDialog):
 
             # bake the stored transforms to the cotrols
             for j, n in enumerate(key_dst_nodes):
-                n.setMatrix(worldMatrixList[i][j], worldSpace=True)
+                if worldMatrixList[i][j]:
+                    n.setMatrix(worldMatrixList[i][j], worldSpace=True)
 
             pm.setKeyframe(key_dst_nodes, at=channels)
             pm.setKeyframe(switch_attr_name)
@@ -2001,7 +1974,7 @@ class ParentSpaceTransfer(AbstractAnimationTransfer):
         else:
             pm.displayWarning("No keys to transfer.")
             return
-        
+
         # get world transform data for the source nodes
         # and store them in a list for each frame
         world_transform_data = []
@@ -2015,7 +1988,7 @@ class ParentSpaceTransfer(AbstractAnimationTransfer):
                 world_transform_data_frame.append(transform.get_world_transform_data(n))
 
             world_transform_data.append(world_transform_data_frame)
-        
+
         # delete animation in the space switch channel and destination ctrls
         pm.cutKey(key_dst_nodes, at=channels, time=(startFrame, endFrame))
         pm.cutKey(switch_attr_name, time=(startFrame, endFrame))
@@ -2230,9 +2203,9 @@ class IkFkTransfer(AbstractAnimationTransfer):
                 else:
                     src_nodes.append(self.ikRotTarget)
                 if isinstance(self.ikRotCtl, list):
-                    key_nodes.extend(self.ikRotCtl)
+                    dst_nodes.extend(self.ikRotCtl)
                 else:
-                    key_nodes.append(self.ikRotCtl)
+                    dst_nodes.append(self.ikRotCtl)
 
             roll_att = self.getChangeRollAttrName()
             pm.cutKey(roll_att, time=(startFrame, endFrame), cl=True)
@@ -2250,7 +2223,6 @@ class IkFkTransfer(AbstractAnimationTransfer):
                 val_src_n, key_src_n, key_dst_n, definition = fk_definition()
             else:  # to IK
                 val_src_n, key_src_n, key_dst_n, definition = ik_definition()
-
         self.bakeAnimation(
             self.getChangeAttrName(),
             val_src_n,
@@ -2354,7 +2326,6 @@ class IkFkTransfer(AbstractAnimationTransfer):
 
         # Create minimal UI object
         ui = IkFkTransfer()
-
         ui.setComboObj(None)
         ui.setModel(model)
         ui.setUiHost(uihost)
