@@ -270,13 +270,13 @@ class Component(component.Main):
                         node_mtx_cns = applyop.gear_matrix_cns(
                             self.fk_ctl[i], loc, connect_srt="st"
                         )
-                        node_mtx_cns.rename("{}_matrixConst".format(loc))
+                        node_mtx_cns.rename("{}_matrixConst".format(loc.shortName()))
 
                         # create an aimMatrix node
                         aim_matrix_node = pm.createNode("aimMatrix")
-                        aim_matrix_node.rename("{}_aimMatrix".format(loc))
+                        aim_matrix_node.rename("{}_aimMatrix".format(loc.shortName()))
                         dec_matrix_node = pm.createNode("decomposeMatrix")
-                        dec_matrix_node.rename("{}_decomposeMatrix".format(loc))
+                        dec_matrix_node.rename("{}_decomposeMatrix".format(loc.shortName()))
 
                         # setup with an aimMatrix
                         pm.connectAttr(
@@ -287,8 +287,14 @@ class Component(component.Main):
                             "{}.worldMatrix[0]".format(self.fk_ctl[i + 1]),
                             "{}.primary.primaryTargetMatrix".format(aim_matrix_node),
                         )
-                        pm.connectAttr(
+
+                        mult_mtx = node.createMultMatrixNode(
                             "{}.outputMatrix".format(aim_matrix_node),
+                            "{}.parentInverseMatrix".format(loc),
+                        )
+
+                        pm.connectAttr(
+                            "{}.matrixSum".format(mult_mtx),
                             "{}.inputMatrix".format(dec_matrix_node),
                         )
                         pm.connectAttr(
@@ -373,13 +379,19 @@ class Component(component.Main):
 
     def constraint_chain(self, src, dst):
         mat_node = applyop.gear_matrix_cns(src, dst, connect_srt="st")
-        mat_node.rename("{}_matrixConst".format(dst))
+        mat_node.rename("{}_matrixConst".format(dst.shortName()))
         dec_matrix_node = pm.createNode("decomposeMatrix")
-        dec_matrix_node.rename("{}_decomposeMatrix".format(dst))
+        dec_matrix_node.rename("{}_decomposeMatrix".format(dst.shortName()))
 
-        pm.connectAttr(
-            "{}.worldMatrix[0]".format(src), "{}.inputMatrix".format(dec_matrix_node)
+        mult_mtx = node.createMultMatrixNode(
+            "{}.worldMatrix[0]".format(src),
+            "{}.parentInverseMatrix".format(dst),
         )
+        pm.connectAttr(
+            "{}.matrixSum".format(mult_mtx),
+            "{}.inputMatrix".format(dec_matrix_node),
+        )
+
         pm.connectAttr(
             "{}.outputRotate".format(dec_matrix_node), "{}.rotate".format(dst)
         )
