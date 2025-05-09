@@ -353,6 +353,23 @@ class _Node(base.Node):
     def stripNamespace(self):
         return "|".join([x.split(":")[-1] for x in self.name().split("|")])
 
+    def child(self, index=0):
+        """Retrieve a specific child node by index.
+
+        Args:
+            index (int): The index of the child to retrieve. Defaults to 0.
+
+        Returns:
+            _Node: The child node at the specified index.
+
+        Raises:
+            IndexError: If the index is out of range.
+        """
+        children = self.listRelatives(c=True, fullPath=True)
+        if not children or index < 0 or index >= len(children):
+            raise IndexError(f"Child index {index} is out of range.")
+        return children[index]
+
     def attr(self, name, checkShape=True):
         """Retrieve an attribute from the node.
 
