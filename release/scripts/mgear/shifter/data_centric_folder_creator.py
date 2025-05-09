@@ -244,20 +244,16 @@ class FolderStructureCreatorUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         custom_step_folder_name = self.config["custom_step_folder"]
         data_folder_name = self.config["data_folder"]
         asset_type = self.config["type"]
-        name = self.config["name"]
-        if not name:
-            pm.displayWarning("Please set the name of the asset")
+        names = [n.strip() for n in self.config["name"].split(",")]  # Split names
+        if not names or not any(names):
+            pm.displayWarning("Please set the name(s) of the asset")
             return
         variants = self.config["variant"]
         targets = self.config["target"]
 
         def create_folder(path):
-            # determines sub_folders based on whether data_folder_name is in path
-            sub_dirs = (
-                ["data", "assets"]
-                if data_folder_name in path
-                else ["pre", "post"]
-            )
+            # Determines sub_folders based on whether data_folder_name is in path
+            sub_dirs = ["data", "assets"] if data_folder_name in path else ["pre", "post"]
             for sub_dir in sub_dirs:
                 sub_dir_path = os.path.join(path, sub_dir)
                 if not os.path.exists(sub_dir_path):
@@ -267,38 +263,36 @@ class FolderStructureCreatorUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             root_shared = os.path.join(base_path, root_folder, "_shared")
             create_folder(root_shared)
 
-            asset_type_shared = os.path.join(
-                base_path, root_folder, asset_type, "_shared"
-            )
+            asset_type_shared = os.path.join(base_path, root_folder, asset_type, "_shared")
             create_folder(asset_type_shared)
 
-            name_shared = os.path.join(
-                base_path, root_folder, asset_type, name, "_shared"
-            )
-            create_folder(name_shared)
-
-            for variant in variants:
-                variant_shared = os.path.join(
-                    base_path,
-                    root_folder,
-                    asset_type,
-                    name,
-                    variant,
-                    "_shared",
+            for name in names:  # Loop through each name
+                name_shared = os.path.join(
+                    base_path, root_folder, asset_type, name, "_shared"
                 )
-                create_folder(variant_shared)
+                create_folder(name_shared)
 
-                for target in targets:
-
-                    path = os.path.join(
+                for variant in variants:
+                    variant_shared = os.path.join(
                         base_path,
                         root_folder,
                         asset_type,
                         name,
                         variant,
-                        target,
+                        "_shared",
                     )
-                    create_folder(path)
+                    create_folder(variant_shared)
+
+                    for target in targets:
+                        path = os.path.join(
+                            base_path,
+                            root_folder,
+                            asset_type,
+                            name,
+                            variant,
+                            target,
+                        )
+                        create_folder(path)
 
         QtWidgets.QMessageBox.information(
             self,
