@@ -305,7 +305,8 @@ class Component(component.Main):
                                               "float",
                                               self.settings["bias"],
                                               0,
-                                              1)
+                                              1,
+                                              uihost=self.fk_ctl[0])
             if self.settings["keepLength"]:
                 self.length_ratio_att = self.addAnimParam("length_ratio",
                                                           "Length Ratio",
