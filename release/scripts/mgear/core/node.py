@@ -31,6 +31,14 @@ def createMultMatrixNode(mA, mB, target=False, transform="srt"):
         pyNode: Newly created mGear_multMatrix node
 
     """
+
+    if isinstance(mA, str):
+        mA = pm.PyNode(mA)
+    if isinstance(mB, str):
+        mB = pm.PyNode(mB)
+    if isinstance(target, str):
+        target = pm.PyNode(target)
+
     node = pm.createNode("multMatrix")
     for m, mi in zip([mA, mB], ["matrixIn[0]", "matrixIn[1]"]):
         if isinstance(m, datatypes.Matrix):
