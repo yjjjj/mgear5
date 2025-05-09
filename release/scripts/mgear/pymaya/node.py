@@ -340,7 +340,7 @@ class _Node(base.Node):
         """Return the short name of the node."""
         fdag = super(_Node, self).__getattribute__("_Node__fn_dag")
         if fdag is not None:
-            return fdag.partialPathName()
+            return fdag.partialPathName().split("|")[-1]
         fdg = super(_Node, self).__getattribute__("_Node__fn_dg")
         return fdg.name().split("|")[-1]
 
