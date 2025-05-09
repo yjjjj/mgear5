@@ -432,9 +432,18 @@ class Component(component.Main):
             self.fk_ctl[1], self.match_fk1_off, "fk1_mth"
         )
 
-        self.match_fk2 = self.add_match_ref(
-            self.fk_ctl[2], self.ik_ctl, "fk2_mth"
-        )
+        if self.settings["ikTR"]:
+            reference = self.ikRot_ctl
+
+            self.match_ikRot = self.add_match_ref(self.ikRot_ctl,
+                                                  self.fk2_ctl,
+                                                  "ikRot_mth")
+        else:
+            reference = self.ik_ctl
+
+        self.match_fk2 = self.add_match_ref(self.fk_ctl[2],
+                                            reference,
+                                            "fk2_mth")
 
         self.match_ik = self.add_match_ref(self.ik_ctl, self.fk2_ctl, "ik_mth")
 
@@ -704,13 +713,6 @@ class Component(component.Main):
         if self.negate:
             self.end_ref.attr("rz").set(180.0)
 
-        if self.settings["ikTR"]:
-            # reference = self.ikRot_ctl
-            self.match_ikRot = primitive.addTransform(
-                self.fk2_ctl,
-                self.getName("ikRot_mth"),
-                transform.getTransform(self.ikRot_ctl),
-            )
 
         if self.settings["use_blade"]:
             # set the offset rotation for the hand
