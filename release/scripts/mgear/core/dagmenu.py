@@ -222,7 +222,7 @@ def __range_switch_callback(*args):
         cmds.listAttr(switch_control, ud=True, string=criteria) or []
     )
     if component_ctl:
-        # ik_list = []
+        ik_list = []
         # fk_list = []
         # NOTE: with the new implemantation provably ikRot_list and upc_list
         # are not needed anymore since the controls will be passed with the
@@ -242,8 +242,13 @@ def __range_switch_callback(*args):
                 k: v for k, v in ik_controls.items() if v is not None
             }
             ik_controls_complete_dict.update(filtered_ik_controls)
-
-        ik_controls_complete_list = list(ik_controls_complete_dict.values())
+            if filtered_ik_controls:
+                if "ik_control" in ik_controls_complete_dict.keys():
+                    ik_list.append(ik_controls_complete_dict["ik_control"])
+                if "pole_vector" in ik_controls_complete_dict.keys():
+                    upv_list.append(ik_controls_complete_dict["pole_vector"])
+                if "ik_rot" in ik_controls_complete_dict.keys():
+                    ikRot_list.append(ik_controls_complete_dict["ik_rot"])
 
         # calls the ui
         range_switch.showUI(
@@ -251,7 +256,7 @@ def __range_switch_callback(*args):
             ikfk_attr=blend_attr,
             uihost=stripNamespace(switch_control),
             fks=fk_controls_complete_list,
-            ik=ik_controls_complete_list,
+            ik=ik_list,
             upv=upv_list,
             ikRot=ikRot_list,
         )

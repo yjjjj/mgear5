@@ -1234,11 +1234,6 @@ def ikFkMatch_with_namespace(
             roll_ctl = _get_node(ik_controls["roll"])
             roll_ctl.rotateX.set(0)
 
-            # test if roll ctl has match,  and match if exist
-            roll_ctl_target = _get_mth(roll_ctl)
-            if roll_ctl_target:
-                transform.matchWorldTransform(roll_ctl_target, roll_ctl)
-
         # reset IK foot ctls
         if foot_cnx:
             attribute.reset_SRT(foot_IK_ctls)
