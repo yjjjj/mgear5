@@ -23,7 +23,7 @@ class FolderStructureCreatorUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.init_ui()
         self.setMinimumWidth(200)
         self.setAcceptDrops(True)
-        self.resize(550, 200)
+        self.resize(400, 150)
         self.connect_signals()
 
     def create_actions(self):
@@ -113,7 +113,7 @@ class FolderStructureCreatorUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         # Vertical expander (spacer)
         vertical_spacer = QtWidgets.QSpacerItem(
             20,
-            40,
+            10,
             QtWidgets.QSizePolicy.Minimum,
             QtWidgets.QSizePolicy.Expanding,
         )
