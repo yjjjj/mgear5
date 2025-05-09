@@ -46,12 +46,16 @@ class FolderStructureCreatorUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.config_path_btn = widgets.create_button(
             icon="mgear_folder", width=25
         )
+        self.create_btn = QtWidgets.QPushButton("Create Folder Structure")
         config_path_layout = QtWidgets.QHBoxLayout()
         config_path_layout.addWidget(self.config_path_le)
         config_path_layout.addWidget(self.config_path_btn)
 
         config_path_groupbox = QtWidgets.QGroupBox("Configuration Path")
-        config_path_groupbox.setLayout(config_path_layout)
+        config_path_groupbox_layout = QtWidgets.QVBoxLayout()
+        config_path_groupbox_layout.addLayout(config_path_layout)
+        config_path_groupbox_layout.addWidget(self.create_btn)
+        config_path_groupbox.setLayout(config_path_groupbox_layout)
 
         # Main Path UI
         self.path_le = QtWidgets.QLineEdit(self.config.get("path", ""))
@@ -62,7 +66,7 @@ class FolderStructureCreatorUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         main_path_groupbox = QtWidgets.QGroupBox("Root Path")
         main_path_groupbox.setLayout(main_path_layout)
 
-        # root folder names
+        # Root folder names
         self.custom_step_name_le = QtWidgets.QLineEdit(
             self.config["custom_step_folder"]
         )
@@ -85,10 +89,7 @@ class FolderStructureCreatorUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             ", ".join(self.config.get("target", ["layout", "anim"]))
         )
 
-        # Buttons
-        self.create_btn = QtWidgets.QPushButton("Create Folder Structure")
-
-        # settings layout
+        # Settings layout
         settings_layout = QtWidgets.QVBoxLayout()
         settings_layout.addWidget(QtWidgets.QLabel("Type:"))
         settings_layout.addWidget(self.type_le)
@@ -98,9 +99,16 @@ class FolderStructureCreatorUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         settings_layout.addWidget(self.variant_le)
         settings_layout.addWidget(QtWidgets.QLabel("Target:"))
         settings_layout.addWidget(self.target_le)
-        settings_layout.addWidget(self.create_btn)
         settings_groupbox = QtWidgets.QGroupBox("Settings")
         settings_groupbox.setLayout(settings_layout)
+
+        # Collapsible section for "Configuration Creator"
+        self.config_creator_widget = widgets.CollapsibleWidget(
+            "Configuration Creator", expanded=False
+        )
+        self.config_creator_widget.addWidget(main_path_groupbox)
+        self.config_creator_widget.addWidget(folder_names_groupbox)
+        self.config_creator_widget.addWidget(settings_groupbox)
 
         # Vertical expander (spacer)
         vertical_spacer = QtWidgets.QSpacerItem(
@@ -109,11 +117,10 @@ class FolderStructureCreatorUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             QtWidgets.QSizePolicy.Minimum,
             QtWidgets.QSizePolicy.Expanding,
         )
+
         # Layout setup
         self.layout.addWidget(config_path_groupbox)
-        self.layout.addWidget(main_path_groupbox)
-        self.layout.addWidget(folder_names_groupbox)
-        self.layout.addWidget(settings_groupbox)
+        self.layout.addWidget(self.config_creator_widget)
         self.layout.addItem(vertical_spacer)
 
     def connect_signals(self):
