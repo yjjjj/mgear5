@@ -237,7 +237,6 @@ class MeshVertex(_SingleIndexGeom):
         return it.onBoundary()
 
 
-
 class MeshFace(_SingleIndexGeom):
     @classmethod
     def Match(cls, dagpath, component):
@@ -349,6 +348,15 @@ class MeshEdge(_SingleIndexGeom):
         return MeshVertex(self.dagPath(), comp_obj1), MeshVertex(
             self.dagPath(), comp_obj2
         )
+
+    def longName(self):
+        """Returns the full path name of the mesh edge, including edge indices.
+
+        Returns:
+            str: The full path name of the mesh edge.
+        """
+        indices_str = ",".join(map(str, self.indices()))
+        return f"{self.dagPath().fullPathName()}.e[{indices_str}]"
 
     def connectedEdges(self):
         it = OpenMaya.MItMeshEdge(self.dagPath(), self.component())
