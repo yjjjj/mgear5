@@ -377,7 +377,7 @@ class Plebes:
                 "See the script editor for details!"
             )
 
-    def constrain_to_rig(self, nothing):
+    def constrain_to_rig(self, *args, **kwargs):
         """Constrain the plebe to the mGear rig using constraints"""
         # Sanity checking
         if not pm.objExists(self.template.get("root")):
@@ -434,7 +434,7 @@ class Plebes:
                 "See the script editor for details!"
             )
 
-    def skin_to_rig(self, nothing):
+    def skin_to_rig(self, *args, **kwargs):
         """Transfer skinning from the plebe to the mGear rig"""
         # Sanity checking
         if not pm.objExists(self.template.get("root")):
