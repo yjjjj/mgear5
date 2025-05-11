@@ -534,7 +534,7 @@ class Component(component.Main):
         self.tws3_rot.setAttr("sx", 0.001)
 
         self.tws3_drv = primitive.addTransform(
-            self.legBones[2],
+            self.legBones[3],
             self.getName("tws3_drv"),
             transform.getTransform(self.legBones[3]),
         )
