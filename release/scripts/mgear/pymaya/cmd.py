@@ -8,6 +8,8 @@ import functools
 import inspect
 import pprint
 from . import bind
+from .geometry import MeshEdge, MeshVertex, MeshFace, BindGeometry
+
 
 __all__ = []
 __DO_NOT_CAST_FUNCS = set()
@@ -489,6 +491,11 @@ def _listRelatives(
 
     # If parent flag is set, return parent (if any) and exit.
     if parent:
+        # Check if the node is a MeshEdge, MeshVertex, or MeshFace.
+        bound_geometry = BindGeometry(dag_path, silent=True)
+        if isinstance(bound_geometry, (MeshEdge, MeshVertex, MeshFace)):
+            return _name_to_obj([bound_geometry.dagPath().fullPathName()])
+
         if dag_fn.parentCount() > 0:
             parent_obj = dag_fn.parent(0)
             if not parent_obj.isNull():
