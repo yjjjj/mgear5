@@ -350,13 +350,12 @@ class MeshEdge(_SingleIndexGeom):
         )
 
     def longName(self):
-        """Returns the full path name of the mesh edge, including edge indices.
-
-        Returns:
-            str: The full path name of the mesh edge.
-        """
-        indices_str = ",".join(map(str, self.indices()))
-        return f"{self.dagPath().fullPathName()}.e[{indices_str}]"
+        try:
+            indices = self.indices()
+            indices_str = ",".join(map(str, indices))
+            return f"{self.dagPath().fullPathName()}.e[{indices_str}]"
+        except Exception as e:
+            raise AttributeError(f"Failed to generate longName: {e}")
 
     def connectedEdges(self):
         it = OpenMaya.MItMeshEdge(self.dagPath(), self.component())
