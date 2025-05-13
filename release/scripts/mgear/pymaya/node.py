@@ -558,7 +558,7 @@ class _Node(base.Node):
         return self
 
     def rename(self, name):
-        return cmds.rename(self.name(), name)
+        return BindNode(cmds.rename(self.name(), name))
 
     def startswith(self, word):
         return self.name().startswith(word)
