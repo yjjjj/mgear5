@@ -427,7 +427,7 @@ class HumanIKMapper:
             current_ik_char, attrs_string, sub_ik_constraints_string
         )
 
-        cmds.eval(mel_cmd)
+        mel.eval(mel_cmd)
         # cls.sub_iks_binding(False)
 
     @classmethod
