@@ -54,6 +54,10 @@ class _Geometry(base.Geom):
                     "No such geometry '{}'".format(nodename_or_dagpath)
                 )
 
+    def __str__(self):
+        """Return the  name as a string."""
+        return self.name()
+
     def dagPath(self):
         return self.__dagpath
 
