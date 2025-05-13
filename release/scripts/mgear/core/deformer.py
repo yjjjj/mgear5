@@ -72,10 +72,7 @@ def create_cluster_on_curve(curve, control_points=None):
             "{}.cv[{}]".format(curve, i) for i in control_points
         ]
 
-        # Convert list to PyNode objects
-        control_points_pynodes = [pm.PyNode(cp) for cp in control_points_list]
-
         # Create the cluster deformer
-        cluster_node, cluster_handle = pm.cluster(control_points_pynodes)
+        cluster_node, cluster_handle = pm.cluster(control_points_list)
 
     return cluster_node, cluster_handle
