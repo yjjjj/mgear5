@@ -2,31 +2,58 @@ Release Log
 ===========
 
 
+5.0.7
+------
+**Enhancements**
+ 	* Adding Maya 2026 OSX solvers (Note: RBF weightDriver not yet available in OSX)
+ 	* Flex: Add description in buttons for usage clarity #498
+ 	* Shifter: Chain_net_01: blend ui host is using the first FK control #504
+ 	* Shifter: Expose ctl name in shoulder components  #505
+ 	* Shifter:Data Centric folder creator, add support for "," separation on asset section #497
+
+**Bug Fix**
+	* Anim_picker: update metahuman picker
+	* Animbits: HumanIK Mapper Bake not working  #507
+	* Core: Anim_utils: Range Switch doesn't work for switching FK to IK overtime #488
+	* Core: Anim_Utils: remove getIKPoleVectorMatrices method. We will fall back to the mth node matching. #488
+	* Core: node.py createMultMatrixNode check if args are str and convert to PyNode
+	* PyMaya: cmd: Update listRelatives to return the shape of the geometry as parent of MeshEdge, MeshVertex, or MeshFace types # 263
+	* PyMaya: dag Node shortName now returns shortName. before was returning partilaPathName that can contain more than one "|" separator. #263
+	* PyMaya: Node child method implemented. #496
+	* Rigbits: Eye Rigger 2.0, Facial Rigger - no attribute ‘longName’. Adding longName method to MeshFace #506 #263
+	* Shifter Component Chain_02 rotation issue #478
+	* Shifter: EPIC leg 3jnt_01 Stretch broken when Full3bonesIK is 0  #479
+	* Shifter: IKFK match issues with split wrist build in EPIC_arm_02 and arm_2jnt_freeTangent_01 #491
+	* Shifter: Plebes Constrain to Rig not working  #502
+
+**Deprecated**
+	* Shifter: Remove MS components #503
+
 
 5.0.6
 ------
 **Enhancements**
 	* PyMaya: Shifter: Collecting data only when will be stored. Removed the flush undo. Now we can undo rig builds. pymaya: Python wrapper for mGear #263
 	* Shifter: Adding new Shifter Templates + fix bug on EPIC_met_01 when no control added #306
-	* Shifter: Allow to connect to a non reset rotation joints.  closes #480
+	* Shifter: Allow to connect to a non reset rotation joints.  #480
 	* Shifter: Data collector is production ready. Removed "Experimental" in UI #383
+	* Adding Maya 2026 windows solvers and Weightdriver
 
 **Bug Fix**
-	* adding Maya 2026 windows solvers
-	* Adjust ihi Behavior Based on Mode Type Instead of Step Type closes #472
-	* After setting up RBF, the RBF Manager2 window does not open again. fixes #471
+	* Adjust ihi Behavior Based on Mode Type Instead of Step Type #472
+	* After setting up RBF, the RBF Manager2 window does not open again.  #471
 	* Anim_utils: IK/FK match set key automatically if any related control has already key. Previous fix was for ikFkMatch_with_namespace2, this fix is fro ikFkMatch_with_namespace #445
-	* Core: Anim_utils: space switch and range switch doesn't support rotation pivot offset Fixes #487
+	* Core: Anim_utils: space switch and range switch doesn't support rotation pivot offset  #487
 	* Core: Dagmenu: add neck ik control map for __switch_parent_callback #487
 	* CORE: Maya 2026 support to new addDoubleLinear node naming
-	* EPIC chain IK_FK_01 filing building using mode FK/IK. Fixes #466
+	* EPIC chain IK_FK_01 filing building using mode FK/IK.  #466
 	* EPIC_meta: fix control Relative relations
 	* Fixed missing "size" on Guide file builds #486
 	* Fixed rotation pymel bug, replaced all pymel commands
 	* PyMaya: fix error catch when name clashing in the guides #263
 	* PyMaya: fix SoftTweak error catching #263
 	* Rigbits: ProxySlice: Refactor to maya cmds. fixes #469
-	* Shifter Component 3jnt legs. Change component internal joint visibility to avoid hiding child components closes #483
+	* Shifter Component 3jnt legs. Change component internal joint visibility to avoid hiding child components #483
 	* Shifter: Collect data fix WIP. Related with the new Pymaya wrapper and MVector parsing #263
 	* Shifter: Quadruped leg IK/FK offset bug, IK/FK match menu and misc IK/FK matching .Update EPIC_3jnt_leg and Classic 3_jnt_leg fixes #445
 	* Skin import issue (skinned NURBS curve) fixes #477
@@ -55,11 +82,11 @@ Release Log
 ------
 
 **Enhancements**
-	* Core: Skin IO: review logic to increase performance closes #456
+	* Core: Skin IO: review logic to increase performance #456
 	* PyMaya: cmd update lazy import
 	* PyMaya: New List relatives implementation using api.OpenMaya #452
 	* PyMaya: Node get parent and list relatives update #452
-	* PyMaya: Node.attr: improve implementation to support compound attrs and indexed attrs closes #459
+	* PyMaya: Node.attr: improve implementation to support compound attrs and indexed attrs #459
 	* PyMaya: optimize _obj_to_name and _name_to_obj #263
 	* SimpleRig: clean up  #452
 	* Vendor plugin: Update SHAPES weightdriver plugin to the latest kernel version: from Maya 2020 to 2025
