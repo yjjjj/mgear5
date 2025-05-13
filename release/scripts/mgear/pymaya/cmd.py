@@ -250,7 +250,25 @@ def _pymaya_cmd_wrap(func, wrap_object=True, scope=SCOPE_NODE):
         args = _obj_to_name(args)
         kwargs = _obj_to_name(kwargs)
 
-        res = func(*args, **kwargs)
+        try:
+            res = func(*args, **kwargs)
+        except Exception as e:
+            # Format the command for copy-paste debugging
+            args_repr = ", ".join(repr(arg) for arg in args)
+            kwargs_repr = ", ".join(
+                f"{key}={repr(value)}" for key, value in kwargs.items()
+            )
+            command_repr = (
+                f"{func.__module__}.{func.__name__}({args_repr}, {kwargs_repr})"
+            )
+
+            # Raise an error with detailed debugging information
+            raise RuntimeError(
+                f"Error occurred while calling wrapped function '{func.__module__}.{func.__name__}': {str(e)}\n"
+                f"Arguments: {args}\n"
+                f"Keyword Arguments: {kwargs}\n"
+                f"Command for debugging: {command_repr}"
+            ) from e
         # filter if the function should not return as list
         # Constraints
         if (
