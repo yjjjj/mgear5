@@ -126,7 +126,9 @@ class Ui_Form(object):
         self.gridLayout_4.addWidget(self.groupBox_2, 1, 0, 1, 1)
 
         self.retranslateUi(Form)
-        QtCore.QObject.connect(self.useExistingBS_checkBox, QtCore.SIGNAL("clicked(bool)"), self.foc_checkBox.setDisabled)
+        self.useExistingBS_checkBox.clicked.connect(
+            lambda checked: self.foc_checkBox.setDisabled(checked)
+        )
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
@@ -147,4 +149,3 @@ class Ui_Form(object):
         self.editFrame_pushButton.setText(QtWidgets.QApplication.translate("Form", "Edit Selected Sculpt Frame", None, -1))
         self.editOFF_pushButton.setText(QtWidgets.QApplication.translate("Form", "All Layers Edit OFF", None, -1))
         self.keyframe_checkBox.setText(QtWidgets.QApplication.translate("Form", "Auto Keyframe", None, -1))
-

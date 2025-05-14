@@ -371,56 +371,103 @@ class _Node(base.Node):
         return children[index]
 
     def attr(self, name, checkShape=True):
-        """Retrieve an attribute from the node.
+        """
+        Retrieve an attribute from the node.
+
+        This method attempts to resolve an attribute by its name, including support
+        for compound attributes (e.g., "translate.translateX") and array attributes
+        (e.g., "someArray[0]"). It also handles alias attributes and can fall back
+        to checking the shape node if the attribute is not found on the main node.
 
         Args:
-            name (str): The name of the attribute, including potential
-                        compound attributes (e.g., "translate.translateX"
-                        or "someArray[0]").
-            checkShape (bool, optional): Whether to check the shape node
-                                         if the attribute is not found.
+            name (str): The name of the attribute to retrieve. This can include
+                        compound or array syntax.
+            checkShape (bool, optional): Whether to check the shape node for the
+                                        attribute if it is not found on the main
+                                        node. Defaults to True.
 
         Returns:
-            Attribute: The corresponding attribute wrapper.
+            Attribute: An `Attribute` wrapper object representing the resolved
+                    attribute.
 
         Raises:
-            exception.MayaAttributeError: If the attribute does not exist.
+            exception.MayaAttributeError: If the attribute does not exist or cannot
+                                        be resolved.
+
+        Behavior:
+            - Checks if the attribute exists in the cache.
+            - Resolves compound attributes by splitting the name.
+            - Handles array attributes by extracting the index.
+            - Attempts to find the attribute plug using the OpenMaya API.
+            - Resolves alias attributes if applicable.
+            - Falls back to checking the shape node if `checkShape` is True.
+            - Uses `cmds.objExists` as a final fallback to confirm the attribute's
+            existence.
+
+        Example:
+            >>> node = _Node("pSphere1")
+            >>> translate_x = node.attr("translateX")
+            >>> print(translate_x)
         """
+        # Check if the attribute is already cached
         attr_cache = super(_Node, self).__getattribute__("_Node__attrs")
         if name in attr_cache:
             return attr_cache[name]
 
-        # Handle compound attributes (e.g., "translate.translateX")
+        # Split the attribute name to handle compound attributes
         parts = name.split(".")
         attrname = parts[0]
         sub_attr = parts[1] if len(parts) > 1 else None
         idx = None
 
-        # Handle array attributes like "someArray[0]"
+        # Handle array attributes by extracting the index
         idre = RE_ATTR_INDEX.search(attrname)
         if idre:
             attrname = attrname[: idre.start()]
-            idx = int(idre.group(1))  # Extract the index
+            idx = int(idre.group(1))
 
+        # Attempt to find the attribute plug using the OpenMaya API
         fn_dg = super(_Node, self).__getattribute__("_Node__fn_dg")
         p = None
 
         try:
             p = fn_dg.findPlug(attrname, False)
         except Exception:
-            if checkShape:
+            # Handle alias attributes if the plug is not found
+            try:
+                alias_plug = fn_dg.findAlias(attrname)
+            except Exception:
+                alias_plug = None
+
+            if alias_plug:
+                try:
+                    # Convert the alias plug to a valid MPlug
+                    p = OpenMaya.MPlug(alias_plug)
+                except Exception:
+                    # Fallback to cmds to confirm the attribute's existence
+                    full_attr_name = f"{self.name()}.{attrname}"
+                    if cmds.objExists(full_attr_name):
+                        return attr.Attribute(full_attr_name)
+                    else:
+                        raise exception.MayaAttributeError(
+                            f"Alias '{attrname}' could not be resolved to a valid plug."
+                        )
+            elif checkShape:
+                # Check the shape node if the attribute is not found
                 get_shape = super(_Node, self).__getattribute__("getShape")
                 shape = get_shape()
                 if shape:
                     try:
                         p = shape.dgFn().findPlug(attrname, False)
-                    except:
+                    except Exception:
                         pass
 
+        # If the plug is still not resolved, confirm existence with cmds
         if p is None or p.isNull:
-            raise exception.MayaAttributeError(
-                "No '{}' attr found".format(name)
-            )
+            full_attr_name = f"{self.name()}.{name}"
+            if cmds.objExists(full_attr_name):
+                return attr.Attribute(full_attr_name)
+            raise exception.MayaAttributeError(f"No '{name}' attr found")
 
         # Handle indexed attributes (arrays)
         if idx is not None:
@@ -429,31 +476,27 @@ class _Node(base.Node):
                     p = p.elementByLogicalIndex(idx)
                 except RuntimeError:
                     raise exception.MayaAttributeError(
-                        "Index {} not found in attribute '{}'".format(
-                            idx, attrname
-                        )
+                        f"Index {idx} not found in attribute '{attrname}'"
                     )
             else:
                 raise exception.MayaAttributeError(
-                    "'{}' is not an array attribute".format(attrname)
+                    f"'{attrname}' is not an array attribute"
                 )
 
-        # If no sub-attribute, return the found plug
+        # If no sub-attribute, return the resolved plug
         if not sub_attr:
             attr_cache[name] = attr.Attribute(p)
             return attr_cache[name]
 
-        # Ensure this is a compound attribute
+        # Ensure the attribute is a compound attribute
         attr_obj = p.attribute()
         if not attr_obj.hasFn(OpenMaya.MFn.kCompoundAttribute):
             raise exception.MayaAttributeError(
-                "'{}' is not a compound attribute".format(attrname)
+                f"'{attrname}' is not a compound attribute"
             )
 
-        # Get compound attribute function set
+        # Resolve the sub-attribute within the compound attribute
         fn_attr = OpenMaya.MFnCompoundAttribute(attr_obj)
-
-        # Iterate through children and match names
         found_child_plug = None
         for i in range(fn_attr.numChildren()):
             child_obj = fn_attr.child(i)
@@ -465,9 +508,10 @@ class _Node(base.Node):
 
         if found_child_plug is None or found_child_plug.isNull:
             raise exception.MayaAttributeError(
-                "No '{}' attr found under '{}'".format(sub_attr, attrname)
+                f"No '{sub_attr}' attr found under '{attrname}'"
             )
 
+        # Cache and return the resolved attribute
         attr_cache[name] = attr.Attribute(found_child_plug)
         return attr_cache[name]
 

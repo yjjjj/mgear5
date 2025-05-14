@@ -137,7 +137,7 @@ def create_blendshape_node(bsName, oSel, foc=False, useExsitingBS=False):
         else:
             bs = pm.blendShape(
                 obj,
-                name="_".join([obj.name(), bsName, "blendShape_crank"]),
+                name="_".join([obj.shortName(), bsName, "blendShape_crank"]),
                 foc=foc,
             )[0]
             attribute.addAttribute(
@@ -358,7 +358,7 @@ def setEnabled_random_color_rsl(lyr_name, enabled=True):
 ####################################
 
 
-def add_frame_sculpt(layer_node, anim=False, keyf=[1, 0, 0, 1]):
+def _add_frame_sculpt(layer_node, anim=False, keyf=[1, 0, 0, 1]):
     """Add a sculpt frame to each selected layer
 
     Args:
@@ -446,7 +446,13 @@ def add_frame_sculpt(layer_node, anim=False, keyf=[1, 0, 0, 1]):
 
     for obj, bsn in zip(objs, bs_node):
         dup = pm.duplicate(obj)[0]
-        bst_name = "_".join([layer_node.stripNamespace(), obj.stripNamespace(), frame_name])
+        bst_name = "_".join(
+            [
+                layer_node.stripNamespace(),
+                obj.stripNamespace().split("|")[-1],
+                frame_name,
+            ]
+        )
         pm.rename(dup, bst_name)
         indx = bsn.weight.getNumElements()
         pm.blendShape(
@@ -889,7 +895,7 @@ class crankTool(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         pre = self.crankUIWInst.preHold_spinBox.value()
         pos = self.crankUIWInst.postHold_spinBox.value()
         for layer_node in self._getSelectedListIndexes():
-            add_frame_sculpt(layer_node, anim=anim, keyf=[ei, pre, pos, eo])
+            _add_frame_sculpt(layer_node, anim=anim, keyf=[ei, pre, pos, eo])
 
         self.select_members()
 
