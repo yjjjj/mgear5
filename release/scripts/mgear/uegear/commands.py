@@ -777,7 +777,7 @@ def update_sequencer_camera_from_maya():
 
         try:
             cmds.file(
-                fbx_file_path, force=True, typ="FBX export", pr=True, es=True
+                fbx_file_path, force=True, typ="FBX", pr=True, es=True
             )
             msg = "Camera '{}' exported as FBX to '{}'"
             print(msg.format(camera_name, fbx_file_path))
