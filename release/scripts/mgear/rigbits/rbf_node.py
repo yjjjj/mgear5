@@ -55,7 +55,7 @@ ROTATE_ATTRS = ["rotateX", "rotateY", "rotateZ"]
 
 SCALE_ATTRS = ["scaleX", "scaleY", "scaleZ"]
 
-SUPPORTED_RBF_NODES = ("weightDriver",)
+SUPPORTED_RBF_NODES = ("mGearWeightDriver", "weightDriver")
 
 GENERIC_SUFFIX = "_RBF"
 
