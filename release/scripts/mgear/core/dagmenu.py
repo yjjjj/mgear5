@@ -174,6 +174,8 @@ def _get_switch_node_attrs(node, end_string):
 
     """
     attrs = []
+    if not node:
+        return []
     if not isinstance(end_string, list):
         end_string = [end_string]
     for end_str in end_string:
